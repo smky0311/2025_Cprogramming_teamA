@@ -1,6 +1,6 @@
 <h1>연동 테스트</h1>
 <h3>15일 토요일 자정까지 부탁드립니다</h3>
-<h5>master브랜치 말고 test브랜치를 저희 메인으로 쓸 예정입니다(master는 최종)</h5>
+<h5>master branch 말고 test branch를 저희 메인으로 쓸 예정입니다(master는 최종)</h5>
 본인 브랜치를 만들어서 그곳에 먼저 push해주시고, test branch로 pull request
 주시면 제가 검토후 merge하겠습니다.
 <h5>VS쓰시는 분들은 clone repository 하시면 되고 다른거 쓰시는분들은 git을 사용하시던 하면됩니다.</h5>
