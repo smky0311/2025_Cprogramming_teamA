@@ -1,22 +1,19 @@
 #include <stdio.h>
+#include "name.h"
 
-//본인 이름으로 함수만들어서 메인에 출력(함수원형 꼭 정의하기)
-//**네이밍 user_'본인이름영어로' 하기**
-void user_jihyung();
+// name.c파일로 이동해서 함수선언
+// 함수 이름은 "user_본인이름영어로()" 하기
+// 헤더파일에 함수원형 선언하기
+// main.c에서 main함수내에서 함수호출하기
 
 //main
 int main(void) {
-	//본인이름 함수 호출
+	//본인이름 함수 호출(지형)
 	user_jihyung();
-	//printf...
-	
+	//민수
+	//성진
+	//위얀냐웅
 	return 0;
 }
-//함수정의
-void user_jihyung() {
-	printf("김지형");
-}
-//void user...
-
 
 //for test
