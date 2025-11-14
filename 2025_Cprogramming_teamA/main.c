@@ -6,7 +6,7 @@
 // 헤더파일에 함수원형 선언하기
 // main.c에서 main함수내에서 함수호출하기
 
-//main
+//main함수
 int main(void) {
 	//본인이름 함수 호출(지형)
 	user_jihyung();
