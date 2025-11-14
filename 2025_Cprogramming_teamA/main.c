@@ -3,6 +3,7 @@
 
 int main(void) {
 	print("Hello");
+	print("World");
 	return 0;
 }
 
