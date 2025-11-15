@@ -6,3 +6,7 @@
 void user_jihyung() {
 	printf("김지형");
 }
+
+void user_sungjin() {
+	printf("성진\n");
+}
