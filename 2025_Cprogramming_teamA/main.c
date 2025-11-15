@@ -11,7 +11,7 @@ int main(void) {
 	//본인이름 함수 호출(지형)
 	user_jihyung();
 	//민수
-	//성진
+	user_sungjin();		//성진
 	//위얀냐웅
 	return 0;
 }
