@@ -1,7 +1,7 @@
-#ifndef NAME_H      // "NAME_H°¡ Á¤ÀÇµÇÁö ¾Ê¾Ò´Ù¸é"
-#define NAME_H      // "NAME_H¸¦ Á¤ÀÇ"
+#ifndef NAME_H      // "NAME_Hê°€ ì •ì˜ë˜ì§€ ì•Šì•˜ë‹¤ë©´"
+#define NAME_H      // "NAME_Hë¥¼ ì •ì˜"
 
-// ÇÔ¼ö ¿øÇü ¼±¾ğ
+// í•¨ìˆ˜ ì›í˜• ì„ ì–¸
 void user_jihyung();  
-void user_sungjin();
-#endif              // "Á¶°Ç¹® ³¡"
+void user_minsu();
+#endif    
