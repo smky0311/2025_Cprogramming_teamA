@@ -4,4 +4,6 @@
 // 함수 원형 선언
 void user_jihyung();  
 void user_sungjin();
+void user_minsu();
+void user_wyn();
 #endif              // "조건문 끝"
