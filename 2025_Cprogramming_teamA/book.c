@@ -2,6 +2,7 @@
 #include "common.h" // 전역변수(g_books) 사용을 위해 필수
 #include "book.h"
 
+// 팀원2가 아래 세함수 담당
 void loadBooks() {
     // TODO: books.dat 파일 읽어서 g_books에 채우기
     printf("[System] 도서 데이터를 로드했습니다.\n");
