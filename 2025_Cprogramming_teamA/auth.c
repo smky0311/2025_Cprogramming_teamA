@@ -1,65 +1,136 @@
 #include <stdio.h>
 #include <string.h>
-#include "common.h" // Àü¿ªº¯¼ö(g_users) »ç¿ëÀ» À§ÇØ ÇÊ¼ö
+#include "common.h" // ì „ì—­ë³€ìˆ˜(g_users) ì‚¬ìš©ì„ ìœ„í•´ í•„ìˆ˜
 #include "auth.h"
 
-// ÆÀ¿ø 3 ´ã´ç
+// íŒ€ì› 3 ë‹´ë‹¹
 void signUp() {
-    // TODO: ID Áßº¹Ã¼Å© ¹× g_users¿¡ ½Å±Ô È¸¿ø Ãß°¡
-    printf("[Auth] È¸¿ø°¡ÀÔ ±â´É ½ÇÇà...\n");
+    char id[20];            // Create an array to store the new user ID (max 19 chars + null)
+    char pw[20];            // Create an array to store the password
+    char buf[256];          // Buffer used to read input from the user safely
+
+    printf("[Auth] Sign-up started...\n");  
+    // Prints a message indicating the sign-up process has started
+
+    if (g_userCount >= MAX_USERS) {  
+        // Check if the number of users reached the maximum allowed
+        printf("User limit reached. Cannot add more users.\n");
+        return;  
+        // Stop the function because we cannot add another user
+    }
+
+    printf("Enter new ID: ");  
+    // Ask the user to input a new ID
+
+    if (!fgets(buf, sizeof(buf), stdin)) {  
+        // Use fgets to safely read a line of text into 'buf'
+        // If fgets fails (returns NULL), show error
+        printf("Input error.\n");
+        return;
+    }
+
+    buf[strcspn(buf, "\r\n")] = '\0';  
+    // Remove newline (\n or \r\n) from user input
+
+    strncpy(id, buf, sizeof(id));  
+    // Copy the buffer into 'id' with size limit
+    id[sizeof(id) - 1] = '\0';  
+    // Manually ensure last char is null terminator
+
+    for (int i = 0; i < g_userCount; i++) {  
+        // Loop through existing users to check for duplicate ID
+        if (strcmp(g_users[i].id, id) == 0) {  
+            // Compare input ID with existing user IDs
+            printf("ID already exists. Please choose another.\n");
+            return;  
+            // Stop signup because the ID is already taken
+        }
+    }
+
+    printf("Enter password: ");  
+    // Ask for password
+
+    if (!fgets(buf, sizeof(buf), stdin)) {  
+        printf("Input error.\n");
+        return;
+    }
+
+    buf[strcspn(buf, "\r\n")] = '\0';  
+    // Remove newline again
+
+    strncpy(pw, buf, sizeof(pw));  
+    // Copy password to pw with safety
+    pw[sizeof(pw) - 1] = '\0';  
+    // Ensure null termination
+
+    strncpy(g_users[g_userCount].id, id, sizeof(g_users[g_userCount].id));
+    // Store the new ID into the global users array
+    g_users[g_userCount].id[sizeof(g_users[g_userCount].id) - 1] = '\0';
+
+    strncpy(g_users[g_userCount].pw, pw, sizeof(g_users[g_userCount].pw));
+    // Store the password into users array
+    g_users[g_userCount].pw[sizeof(g_users[g_userCount].pw) - 1] = '\0';
+
+    g_userCount++;  
+    // Increase total user count
+
+    printf("Sign-up complete. User '%s' registered.\n", id);
+    // Confirm success
 }
 
-// ÆÀ¿ø 4(±èÁöÇü) ´ã´ç
+
+
+// íŒ€ì› 4(ê¹€ì§€í˜•) ë‹´ë‹¹
 int login() {
-    char id[20]; // ID±æÀÌ 20
-    char pw[20]; // PW±æÀÌ 20
-    char buf[256]; // ¹öÆÛ±æÀÌ 256
+    char id[20]; // IDê¸¸ì´ 20
+    char pw[20]; // PWê¸¸ì´ 20
+    char buf[256]; // ë²„í¼ê¸¸ì´ 256
 
-    if (g_userCount <= 0) { // À¯ÀúÄ«¿îÆ®°¡ 0ÀÌ¸é
-        printf("[Auth] È¸¿øÁ¤º¸°¡ ¾ø½À´Ï´Ù. È¸¿ø°¡ÀÔÈÄ ÀÌ¿ëÇØÁÖ¼¼¿ä\n"); // ¿¡·¯¸Ş½ÃÁö Ãâ·Â
-        return 0; // 0 ¸®ÅÏ
+    if (g_userCount <= 0) { // ìœ ì €ì¹´ìš´íŠ¸ê°€ 0ì´ë©´
+        printf("[Auth] íšŒì›ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤. íšŒì›ê°€ì…í›„ ì´ìš©í•´ì£¼ì„¸ìš”\n"); // ì—ëŸ¬ë©”ì‹œì§€ ì¶œë ¥
+        return 0; // 0 ë¦¬í„´
     }
     
     
-    // TODO: ID/PW ÀÔ·Â¹Ş°í g_users¿Í ºñ±³
-    printf("[Auth] ·Î±×ÀÎ ±â´É ½ÇÇà...\n"); // ·Î±×ÀÎ ±â´É½ÇÇà Ãâ·Â
+    // TODO: ID/PW ì…ë ¥ë°›ê³  g_usersì™€ ë¹„êµ
+    printf("[Auth] ë¡œê·¸ì¸ ê¸°ëŠ¥ ì‹¤í–‰...\n"); // ë¡œê·¸ì¸ ê¸°ëŠ¥ì‹¤í–‰ ì¶œë ¥
 
-    printf("IDÀÔ·Â: "); // IDÀÔ·Â Ãâ·Â
-    // ¾ÆÀÌµğÀÇ ±æÀÌ¸¦ Ã¼Å©
-    if (!fgets(buf, sizeof(buf), stdin)) { // fgets°¡ bufÀÇ »çÀÌÁî ÀÌ»óÀ» ¹Ş¾Æ¼­ NULL°ªÀ» ¸®ÅÏ -> !fgetsÀÌ¹Ç·Î ÂüÀÌµÇ°í Á¶°Ç¹® ½ÇÇà
-        printf("ÀÔ·Â¿À·ù\n"); // ¿¡·¯¸Ş½ÃÁö Ãâ·Â
-        return 0; // 0 ¸®ÅÏ 
+    printf("IDì…ë ¥: "); // IDì…ë ¥ ì¶œë ¥
+    // ì•„ì´ë””ì˜ ê¸¸ì´ë¥¼ ì²´í¬
+    if (!fgets(buf, sizeof(buf), stdin)) { // fgetsê°€ bufì˜ ì‚¬ì´ì¦ˆ ì´ìƒì„ ë°›ì•„ì„œ NULLê°’ì„ ë¦¬í„´ -> !fgetsì´ë¯€ë¡œ ì°¸ì´ë˜ê³  ì¡°ê±´ë¬¸ ì‹¤í–‰
+        printf("ì…ë ¥ì˜¤ë¥˜\n"); // ì—ëŸ¬ë©”ì‹œì§€ ì¶œë ¥
+        return 0; // 0 ë¦¬í„´ 
     }
-    // fgets´Â ¿£ÅÍ±îÁö ¹®ÀÚ¿­·Î ¹ŞÀ¸¹Ç·Î ¿£ÅÍ°ªÀ» ¾ø¾Ö±â À§ÇÑ ÄÚµå Ãß°¡
-    buf[strcspn(buf, "\r\n")] = '\0'; // buf¹®ÀÚ¿­ ¾È¿¡¼­ carriage return¶Ç´Â line feed Å½»ö ÈÄ ±×ÀÚ¸®¿¡ NULL°ªÀÎ \0´ëÀÔ. 
-    strncpy(id, buf, sizeof(id)); // idÀÇ Å©±â¸¸Å­¸¸ º¹»ç¸¦ ½Ãµµ. bufÀÇ ³»¿ëÀÌ id¸¦ ÃÊ°úÇÑ´Ù¸é ÀÚµ¿Å»¶ô.
-    id[sizeof(id) - 1] = '\0'; // idÀÇ ¸¶Áö¸·Ä­¿¡ °­Á¦·Î NULL¹®ÀÚ¿­À» ³Ö¾îÁÖ¾î ¿À·ù¸¦ ¹æÁö.
+    // fgetsëŠ” ì—”í„°ê¹Œì§€ ë¬¸ìì—´ë¡œ ë°›ìœ¼ë¯€ë¡œ ì—”í„°ê°’ì„ ì—†ì• ê¸° ìœ„í•œ ì½”ë“œ ì¶”ê°€
+    buf[strcspn(buf, "\r\n")] = '\0'; // bufë¬¸ìì—´ ì•ˆì—ì„œ carriage returnë˜ëŠ” line feed íƒìƒ‰ í›„ ê·¸ìë¦¬ì— NULLê°’ì¸ \0ëŒ€ì…. 
+    strncpy(id, buf, sizeof(id)); // idì˜ í¬ê¸°ë§Œí¼ë§Œ ë³µì‚¬ë¥¼ ì‹œë„. bufì˜ ë‚´ìš©ì´ idë¥¼ ì´ˆê³¼í•œë‹¤ë©´ ìë™íƒˆë½.
+    id[sizeof(id) - 1] = '\0'; // idì˜ ë§ˆì§€ë§‰ì¹¸ì— ê°•ì œë¡œ NULLë¬¸ìì—´ì„ ë„£ì–´ì£¼ì–´ ì˜¤ë¥˜ë¥¼ ë°©ì§€.
 
-    // PW ÀÔ·Â
-    printf("PW: "); // PWÀÔ·Â Ãâ·Â
-    if (!fgets(buf, sizeof(buf), stdin)) { // fgets°¡ bufÀÇ »çÀÌÁî ÀÌ»óÀ» ¹Ş¾Æ¼­ NULL°ªÀ» ¸®ÅÏ -> !fgetsÀÌ¹Ç·Î ÂüÀÌµÇ°í Á¶°Ç¹® ½ÇÇà
-        printf("ÀÔ·Â¿À·ù\n");// ¿¡·¯¸Ş½ÃÁö Ãâ·Â
-        return 0; // 0¸®ÅÏ
+    // PW ì…ë ¥
+    printf("PW: "); // PWì…ë ¥ ì¶œë ¥
+    if (!fgets(buf, sizeof(buf), stdin)) { // fgetsê°€ bufì˜ ì‚¬ì´ì¦ˆ ì´ìƒì„ ë°›ì•„ì„œ NULLê°’ì„ ë¦¬í„´ -> !fgetsì´ë¯€ë¡œ ì°¸ì´ë˜ê³  ì¡°ê±´ë¬¸ ì‹¤í–‰
+        printf("ì…ë ¥ì˜¤ë¥˜\n");// ì—ëŸ¬ë©”ì‹œì§€ ì¶œë ¥
+        return 0; // 0ë¦¬í„´
     }
-    // fgets´Â ¿£ÅÍ±îÁö ¹®ÀÚ¿­·Î ¹ŞÀ¸¹Ç·Î ¿£ÅÍ°ªÀ» ¾ø¾Ö±â À§ÇÑ ÄÚµå Ãß°¡
-    buf[strcspn(buf, "\r\n")] = '\0'; // buf¹®ÀÚ¿­ ¾È¿¡¼­ carriage return¶Ç´Â line feed Å½»ö ÈÄ ±×ÀÚ¸®¿¡ NULL°ªÀÎ \0´ëÀÔ.
-    strncpy(pw, buf, sizeof(pw)); // pwÀÇ Å©±â¸¸Å­¸¸ º¹»ç¸¦ ½Ãµµ. bufÀÇ ³»¿ëÀÌ id¸¦ ÃÊ°úÇÑ´Ù¸é ÀÚµ¿Å»¶ô.
-    pw[sizeof(pw) - 1] = '\0'; // pwÀÇ ¸¶Áö¸·Ä­¿¡ °­Á¦·Î NULL¹®ÀÚ¿­À» ³Ö¾îÁÖ¾î ¿À·ù¸¦ ¹æÁö.
+    // fgetsëŠ” ì—”í„°ê¹Œì§€ ë¬¸ìì—´ë¡œ ë°›ìœ¼ë¯€ë¡œ ì—”í„°ê°’ì„ ì—†ì• ê¸° ìœ„í•œ ì½”ë“œ ì¶”ê°€
+    buf[strcspn(buf, "\r\n")] = '\0'; // bufë¬¸ìì—´ ì•ˆì—ì„œ carriage returnë˜ëŠ” line feed íƒìƒ‰ í›„ ê·¸ìë¦¬ì— NULLê°’ì¸ \0ëŒ€ì….
+    strncpy(pw, buf, sizeof(pw)); // pwì˜ í¬ê¸°ë§Œí¼ë§Œ ë³µì‚¬ë¥¼ ì‹œë„. bufì˜ ë‚´ìš©ì´ idë¥¼ ì´ˆê³¼í•œë‹¤ë©´ ìë™íƒˆë½.
+    pw[sizeof(pw) - 1] = '\0'; // pwì˜ ë§ˆì§€ë§‰ì¹¸ì— ê°•ì œë¡œ NULLë¬¸ìì—´ì„ ë„£ì–´ì£¼ì–´ ì˜¤ë¥˜ë¥¼ ë°©ì§€.
 
-    //strcmp¸¦ ÀÌ¿ëÇØ ÀúÀåµÈ ¹è¿­ÀÇ °ª°ú ÇöÀç ÀÔ·Â¹ŞÀº °ªÀÌ °°ÀºÁö ºñ±³ÈÄ ·Î±×ÀÎ ½ÇÇàÇÏ´Â ÄÚµå
-    for (int i = 0; i < g_userCount; i++) { // g_userCount 0ºÎÅÍ ½ÃÀÛÀÌ¹Ç·Î int i = 0 ÃÊ±âÈ­ÈÄ Áõ°¡
-        if (strcmp(g_users[i].id, id) == 0) { // g_users[i].idÀÇ °ª°ú ÇöÀç ÀÔ·Â¹ŞÀº idÀÇ °ªÀÌ °°À¸¸é 0¸®ÅÏÈÄ Á¶°Ç¹®½ÇÇà
-            if (strcmp(g_users[i].pw, pw) == 0) { // g_users[i].pwÀÇ °ª°ú ÇöÀç ÀÔ·Â¹ŞÀº pwÀÇ °ªÀÌ °°À¸¸é 0¸®ÅÏÈÄ Á¶°Ç¹®½ÇÇà
-                printf("[%s]·Î±×ÀÎ ¼º°ø", id); // ¾ÆÀÌµğ¿Í ÇÔ²² ·Î±×ÀÎ¼º°ø Ãâ·Â
-                return 1; // 1À» ¸®ÅÏ(¼º°ø¿ë)
+    //strcmpë¥¼ ì´ìš©í•´ ì €ì¥ëœ ë°°ì—´ì˜ ê°’ê³¼ í˜„ì¬ ì…ë ¥ë°›ì€ ê°’ì´ ê°™ì€ì§€ ë¹„êµí›„ ë¡œê·¸ì¸ ì‹¤í–‰í•˜ëŠ” ì½”ë“œ
+    for (int i = 0; i < g_userCount; i++) { // g_userCount 0ë¶€í„° ì‹œì‘ì´ë¯€ë¡œ int i = 0 ì´ˆê¸°í™”í›„ ì¦ê°€
+        if (strcmp(g_users[i].id, id) == 0) { // g_users[i].idì˜ ê°’ê³¼ í˜„ì¬ ì…ë ¥ë°›ì€ idì˜ ê°’ì´ ê°™ìœ¼ë©´ 0ë¦¬í„´í›„ ì¡°ê±´ë¬¸ì‹¤í–‰
+            if (strcmp(g_users[i].pw, pw) == 0) { // g_users[i].pwì˜ ê°’ê³¼ í˜„ì¬ ì…ë ¥ë°›ì€ pwì˜ ê°’ì´ ê°™ìœ¼ë©´ 0ë¦¬í„´í›„ ì¡°ê±´ë¬¸ì‹¤í–‰
+                printf("[%s]ë¡œê·¸ì¸ ì„±ê³µ", id); // ì•„ì´ë””ì™€ í•¨ê»˜ ë¡œê·¸ì¸ì„±ê³µ ì¶œë ¥
+                return 1; // 1ì„ ë¦¬í„´(ì„±ê³µìš©)
             }
             else {
-                printf("ºñ¹Ğ¹øÈ£°¡ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù\n"); // id´Â ¸Â¾ÒÁö¸¸ ºñ¹Ğ¹øÈ£ Á¶°Ç¹®¿¡¼­ falseÀÏ°æ¿ì ºñ¹ø ¿¡·¯¸Ş½ÃÁö Ãâ·Â
-                return 0; // 0¸®ÅÏ 
+                printf("ë¹„ë°€ë²ˆí˜¸ê°€ ì˜¬ë°”ë¥´ì§€ ì•ŠìŠµë‹ˆë‹¤\n"); // idëŠ” ë§ì•˜ì§€ë§Œ ë¹„ë°€ë²ˆí˜¸ ì¡°ê±´ë¬¸ì—ì„œ falseì¼ê²½ìš° ë¹„ë²ˆ ì—ëŸ¬ë©”ì‹œì§€ ì¶œë ¥
+                return 0; // 0ë¦¬í„´ 
             }
         }
     }
 
-    printf("µî·ÏµÈ ID°¡ Á¸ÀçÇÏÁö ¾Ê½À´Ï´Ù\n"); // id ÀÚÃ¼°¡ °Ë»öµÇÁö ¾ÊÀ»°æ¿ì id ¿¡·¯¸Ş½ÃÁö Ãâ·Â
-    return 0; // 0¸®ÅÏ
+    printf("ë“±ë¡ëœ IDê°€ ì¡´ì¬í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤\n"); // id ìì²´ê°€ ê²€ìƒ‰ë˜ì§€ ì•Šì„ê²½ìš° id ì—ëŸ¬ë©”ì‹œì§€ ì¶œë ¥
+    return 0; // 0ë¦¬í„´
 }
