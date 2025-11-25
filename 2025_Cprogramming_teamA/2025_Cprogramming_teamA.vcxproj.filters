@@ -21,9 +21,21 @@
     <ClCompile Include="name.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="user.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="admin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="name.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="book.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="user.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
