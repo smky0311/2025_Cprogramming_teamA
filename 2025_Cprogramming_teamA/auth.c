@@ -5,52 +5,79 @@
 
 // 팀원 3 담당
 void signUp() {
-    char id[20];
-    char pw[20];
-    char buf[256];
+    char id[20];            // Create an array to store the new user ID (max 19 chars + null)
+    char pw[20];            // Create an array to store the password
+    char buf[256];          // Buffer used to read input from the user safely
 
-    printf("[Auth] Sign-up started...\n");
+    printf("[Auth] Sign-up started...\n");  
+    // Prints a message indicating the sign-up process has started
 
-    if (g_userCount >= MAX_USERS) {
+    if (g_userCount >= MAX_USERS) {  
+        // Check if the number of users reached the maximum allowed
         printf("User limit reached. Cannot add more users.\n");
-        return;
+        return;  
+        // Stop the function because we cannot add another user
     }
 
-    printf("Enter new ID: ");
-    if (!fgets(buf, sizeof(buf), stdin)) {
+    printf("Enter new ID: ");  
+    // Ask the user to input a new ID
+
+    if (!fgets(buf, sizeof(buf), stdin)) {  
+        // Use fgets to safely read a line of text into 'buf'
+        // If fgets fails (returns NULL), show error
         printf("Input error.\n");
         return;
     }
-    buf[strcspn(buf, "\r\n")] = '\0';
-    strncpy(id, buf, sizeof(id));
-    id[sizeof(id) - 1] = '\0';
 
-    for (int i = 0; i < g_userCount; i++) {
-        if (strcmp(g_users[i].id, id) == 0) {
+    buf[strcspn(buf, "\r\n")] = '\0';  
+    // Remove newline (\n or \r\n) from user input
+
+    strncpy(id, buf, sizeof(id));  
+    // Copy the buffer into 'id' with size limit
+    id[sizeof(id) - 1] = '\0';  
+    // Manually ensure last char is null terminator
+
+    for (int i = 0; i < g_userCount; i++) {  
+        // Loop through existing users to check for duplicate ID
+        if (strcmp(g_users[i].id, id) == 0) {  
+            // Compare input ID with existing user IDs
             printf("ID already exists. Please choose another.\n");
-            return;
+            return;  
+            // Stop signup because the ID is already taken
         }
     }
 
-    printf("Enter password: ");
-    if (!fgets(buf, sizeof(buf), stdin)) {
+    printf("Enter password: ");  
+    // Ask for password
+
+    if (!fgets(buf, sizeof(buf), stdin)) {  
         printf("Input error.\n");
         return;
     }
-    buf[strcspn(buf, "\r\n")] = '\0';
-    strncpy(pw, buf, sizeof(pw));
-    pw[sizeof(pw) - 1] = '\0';
+
+    buf[strcspn(buf, "\r\n")] = '\0';  
+    // Remove newline again
+
+    strncpy(pw, buf, sizeof(pw));  
+    // Copy password to pw with safety
+    pw[sizeof(pw) - 1] = '\0';  
+    // Ensure null termination
 
     strncpy(g_users[g_userCount].id, id, sizeof(g_users[g_userCount].id));
+    // Store the new ID into the global users array
     g_users[g_userCount].id[sizeof(g_users[g_userCount].id) - 1] = '\0';
 
     strncpy(g_users[g_userCount].pw, pw, sizeof(g_users[g_userCount].pw));
+    // Store the password into users array
     g_users[g_userCount].pw[sizeof(g_users[g_userCount].pw) - 1] = '\0';
 
-    g_userCount++;
+    g_userCount++;  
+    // Increase total user count
 
     printf("Sign-up complete. User '%s' registered.\n", id);
+    // Confirm success
 }
+
 
 
 // 팀원 4(김지형) 담당
