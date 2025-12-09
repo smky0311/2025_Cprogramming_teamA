@@ -3,29 +3,27 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <windows.h>
 #include "common.h" 
 #include "book.h"
 #include "user.h"
 #include "auth.h"
 #include "mine.h"
 
-// main.c는 최소한으로 터치
-// 각각 맡은범위 위주로 코드작성하기
-// 팀원1 -> user.c (함수3개)
-// 팀원2 -> book.c (함수3개)
-// 팀원3 -> auth.c (회원가입)
-// 팀원4 -> auth.c (로그인)
-// [전역 변수 실제 정의]
-// 프로그램 전체에서 메모리는 오직 여기서만 할당됨
-Book g_books[MAX_BOOKS]; // 책 배열 참조
-User g_users[MAX_USERS]; // 유저 배열 참조
-int g_bookCount = 0; // 책 카운트 초기화
-int g_userCount = 0; // 유저 카운트 초기화
+Book g_books[MAX_BOOKS];
+User g_users[MAX_USERS];
+int g_bookCount = 0;
+int g_userCount = 0;
 
 int main() {
-    // 1. 데이터 로드
-    loadBooks(); // 책 데이터 로드
-    loadUsers(); // 유저 데이터 로드
+    // ★ UTF-8 설정 (파일이 UTF-8이므로) ★
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+
+    loadBooks();
+    loadUsers();
+
+    // ... 나머지 코드 동일 ...
 
     char choiceStr[10]; // 입력값을 받을 문자열 버퍼 선언
     int choice; // switch문용 변수선언
