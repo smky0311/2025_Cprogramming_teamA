@@ -1,4 +1,23 @@
+/**
+ * @file auth.h
+ * @brief Header file for authentication module
+ *
+ * Declares functions for user registration and login.
+ */
+
 #pragma once
 
+/**
+ * @brief Registers a new user in the system
+ *
+ * Prompts for ID and password, validates the ID is unique,
+ * and adds the new user to the global user array.
+ */
 void signUp();
-int login(); // 성공 시 1, 실패 시 0 반환하도록 설계
+
+/**
+ * @brief Authenticates a user with ID and password
+ *
+ * @return 1 on successful login, 0 on failure
+ */
+int login();

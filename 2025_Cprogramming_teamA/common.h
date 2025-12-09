@@ -1,28 +1,49 @@
-// common.h
-#pragma once  // 헤더 중복 포함 방지
+/**
+ * @file common.h
+ * @brief Common definitions and declarations for the library system
+ *
+ * This header file contains constant definitions, structure declarations,
+ * and external variable declarations used across all modules.
+ */
 
-// 1. 상수 정의
-#define MAX_BOOKS 100 // 최대 도서 100권
-#define MAX_USERS 50 // 최대 유저 50명
+#pragma once  /* Prevent multiple header inclusion */
 
-// 2. 구조체 정의
+/* ============================================
+ * 1. CONSTANT DEFINITIONS
+ * ============================================ */
+#define MAX_BOOKS 100  /* Maximum number of books in the system */
+#define MAX_USERS 50   /* Maximum number of users in the system */
+
+/* ============================================
+ * 2. STRUCTURE DEFINITIONS
+ * ============================================ */
+
+/**
+ * @brief Structure representing a book in the library
+ */
 typedef struct {
-    char title[100]; // 책 제목
-    char id[20];
-    int available;
-    char author[30];
-    // ... 
+    char title[100];   /* Book title (max 99 chars + null) */
+    char id[20];       /* Book ID/ISBN */
+    int available;     /* Availability status: 1 = available, 0 = borrowed */
+    char author[30];   /* Author name */
 } Book;
 
+/**
+ * @brief Structure representing a user in the system
+ */
 typedef struct {
-    char id[20]; // 유저 아이디
-    char pw[20]; // 유저 비밀번호
-    // ... 
+    char id[20];  /* User ID (max 19 chars + null) */
+    char pw[20];  /* User password (max 19 chars + null) */
 } User;
 
-// 3. 전역 변수 "선언" (이곳에서만 extern 사용)
-// 주의: 여기서 초기화(= {0})를 하면 안됨.
-extern Book g_books[MAX_BOOKS]; // 책 배열선언
-extern User g_users[MAX_USERS]; // 유저 배열선언
-extern int g_bookCount; // 책 넘버링
-extern int g_userCount; // 유저 넘버링
+/* ============================================
+ * 3. EXTERNAL VARIABLE DECLARATIONS
+ * ============================================
+ * Note: Only declare with extern here.
+ *       Do NOT initialize (= {0}) in header files.
+ *       Actual definitions are in main.c
+ */
+extern Book g_books[MAX_BOOKS];  /* Global book array */
+extern User g_users[MAX_USERS];  /* Global user array */
+extern int g_bookCount;          /* Current number of books */
+extern int g_userCount;          /* Current number of users */
