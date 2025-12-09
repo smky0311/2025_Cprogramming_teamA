@@ -1,20 +1,49 @@
+/**
+ * @file user.c
+ * @brief User management module for the library system
+ *
+ * This file handles loading, saving, and managing user data.
+ * It provides functionality for persisting user information
+ * and viewing user lists (admin feature).
+ */
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include "common.h" // 전역변수(g_users) 사용을 위해 필수
+#include "common.h"  /* Required for global variables (g_users) */
 #include "user.h"
 
-// 팀원 1이 아래 세 함수 담당
+/**
+ * @brief Loads user data from the data file
+ *
+ * Reads user information from 'users.dat' file into the global
+ * g_users array. If the file doesn't exist, starts with empty data.
+ *
+ * TODO: Implement file reading logic similar to loadBooks()
+ */
 void loadUsers() {
-    // TODO: users.dat 파일 읽어서 g_users에 채우기
-    printf("[System] 회원 데이터를 로드했습니다.\n");
+    printf("[System] User data loaded.\n");
 }
 
+/**
+ * @brief Saves user data to the data file
+ *
+ * Writes all user information from the global g_users array
+ * to 'users.dat' file for persistent storage.
+ *
+ * TODO: Implement file writing logic similar to saveBooks()
+ */
 void saveUsers() {
-    // TODO: g_users 내용을 users.dat에 저장하기
-    printf("[System] 회원 데이터를 저장했습니다.\n");
+    printf("[System] User data saved.\n");
 }
 
+/**
+ * @brief Displays the user management menu for administrators
+ *
+ * Provides options to view and manage registered users.
+ * This is an admin-only feature.
+ *
+ * TODO: Implement user listing and management options
+ */
 void manageUsers() {
-    // TODO: 회원 목록 출력 구현
-    printf("[Admin] 회원 관리 메뉴 진입...\n");
+    printf("[Admin] Entering user management menu...\n");
 }

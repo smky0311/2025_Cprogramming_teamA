@@ -1,35 +1,50 @@
+/**
+ * @file mine.c
+ * @brief Text-based Minesweeper game module
+ *
+ * This file implements a classic Minesweeper game with selectable
+ * difficulty levels. Features include cell revealing, flagging,
+ * flood-fill for empty cells, and win/lose detection.
+ */
+
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
-#include <ctype.h>
+#include <ctype.h>  /* Required for tolower function */
 #include "common.h"
-// tolower 함수 사용을 위해 추가
 
-#define ROWS 9
-#define COLS 9
-// #define MINES 10    // 삭제됨
+#define ROWS 9  /* Number of rows in the game board */
+#define COLS 9  /* Number of columns in the game board */
 
-int g_mines = 0; // 전역 변수
-bool mineBoard[ROWS][COLS];
-int adjacentMines[ROWS][COLS];
-char displayBoard[ROWS][COLS];
-int totalRevealed = 0;
+/* Global variables for game state */
+int g_mines = 0;                    /* Current number of mines */
+bool mineBoard[ROWS][COLS];         /* True if cell contains a mine */
+int adjacentMines[ROWS][COLS];      /* Count of adjacent mines for each cell */
+char displayBoard[ROWS][COLS];      /* Display state: '?', 'F', ' ', '1'-'8', '*' */
+int totalRevealed = 0;              /* Number of safe cells revealed */
 
+/* Direction vectors for 8 adjacent cells (N, NE, E, SE, S, SW, W, NW) */
 int dx[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 int dy[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
-// --- 유틸리티 함수 ---
+/**
+ * @brief Clears the input buffer
+ *
+ * Reads and discards all characters from stdin until
+ * a newline or EOF is encountered.
+ */
 void clear_input_buffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-// --- 게임 로직 함수 (기존 코드 유지) ---
-
 /**
- * Initializes the display board with '?' for hidden cells.
+ * @brief Initializes the display board with hidden cells
+ *
+ * Sets all cells on the display board to '?' indicating
+ * they are hidden and have not been revealed yet.
  */
 void initDisplay() {
     for (int i = 0; i < ROWS; i++) {
@@ -40,16 +55,24 @@ void initDisplay() {
 }
 
 /**
- * Randomly places MINES on the board without overlaps.
+ * @brief Randomly places mines on the game board
+ *
+ * Clears the mine board and randomly places the specified
+ * number of mines without overlapping.
+ *
+ * @param g_mines Number of mines to place on the board
  */
-void placeMines(int g_mines) { // g_mines를 인자로 받도록 수정
+void placeMines(int g_mines) {
+    /* Clear all cells first */
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             mineBoard[i][j] = false;
         }
     }
+
+    /* Place mines randomly */
     int placed = 0;
-    while (placed < g_mines) { // MINES -> g_mines
+    while (placed < g_mines) {
         int r = rand() % ROWS;
         int c = rand() % COLS;
         if (!mineBoard[r][c]) {
@@ -60,15 +83,20 @@ void placeMines(int g_mines) { // g_mines를 인자로 받도록 수정
 }
 
 /**
- * Computes the number of adjacent mines for each safe cell.
+ * @brief Computes adjacent mine counts for all cells
+ *
+ * Calculates and stores the number of adjacent mines for
+ * each safe cell. Mine cells are marked with -1.
  */
 void computeAdjacent() {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             if (mineBoard[i][j]) {
-                adjacentMines[i][j] = -1; // Marker for mine
+                adjacentMines[i][j] = -1;  /* Mark as mine */
                 continue;
             }
+
+            /* Count adjacent mines */
             int count = 0;
             for (int d = 0; d < 8; d++) {
                 int ni = i + dx[d];
@@ -83,9 +111,14 @@ void computeAdjacent() {
 }
 
 /**
- * Prints the current state of the board.
+ * @brief Prints the current state of the game board
+ *
+ * Displays the board with row/column indices and shows
+ * the current progress (revealed cells vs total safe cells).
+ *
+ * @param MINES_count Total number of mines for progress calculation
  */
-void printBoard(int MINES_count) { // 인자로 mines_count 받도록 수정
+void printBoard(int MINES_count) {
     printf("\n  0 1 2 3 4 5 6 7 8\n");
     for (int i = 0; i < ROWS; i++) {
         printf("%d ", i);
@@ -99,21 +132,31 @@ void printBoard(int MINES_count) { // 인자로 mines_count 받도록 수정
 }
 
 /**
- * Recursively reveals a safe cell and auto-reveals adjacent safe empties (flood fill).
+ * @brief Reveals a cell and performs flood-fill for empty cells
+ *
+ * Recursively reveals cells starting from the specified position.
+ * If the cell has no adjacent mines, automatically reveals all
+ * adjacent safe cells (flood-fill algorithm).
+ *
+ * @param r Row index of the cell to reveal
+ * @param c Column index of the cell to reveal
  */
 void reveal(int r, int c) {
+    /* Boundary and already-revealed checks */
     if (r < 0 || r >= ROWS || c < 0 || c >= COLS || displayBoard[r][c] != '?') {
         return;
     }
-    // 지뢰가 없는 셀만 드러냄
+
+    /* Don't reveal mine cells through flood-fill */
     if (mineBoard[r][c]) {
         return;
     }
 
-    // 이 부분에서 totalRevealed가 증가해야 합니다.
+    /* Reveal this cell */
     displayBoard[r][c] = (adjacentMines[r][c] == 0) ? ' ' : ('0' + adjacentMines[r][c]);
     totalRevealed++;
 
+    /* Flood-fill: if cell is empty, reveal adjacent cells */
     if (adjacentMines[r][c] == 0) {
         for (int d = 0; d < 8; d++) {
             reveal(r + dx[d], c + dy[d]);
@@ -122,28 +165,39 @@ void reveal(int r, int c) {
 }
 
 /**
- * Checks if the player has won (all safe cells revealed).
+ * @brief Checks if the player has won the game
+ *
+ * The player wins when all safe (non-mine) cells have been revealed.
+ *
+ * @param MINES_count Total number of mines
+ * @return true if all safe cells are revealed, false otherwise
  */
-bool hasWon(int MINES_count) { // 인자로 mines_count 받도록 수정
+bool hasWon(int MINES_count) {
     return totalRevealed == (ROWS * COLS - MINES_count);
 }
 
-// --- 메인 메뉴 및 난이도 선택 함수 추가 ---
-
+/**
+ * @brief Displays difficulty selection menu and returns mine count
+ *
+ * Allows the player to choose between Easy, Medium, and Hard
+ * difficulty levels, each with different mine counts.
+ *
+ * @return Number of mines for selected difficulty, 0 to return to menu
+ */
 int select_difficulty() {
     int choice;
     int mines_count = 0;
 
     while (true) {
-        printf("\n--- 난이도 선택 (9x9) ---\n");
-        printf("1. 하 (20 Mines)\n");
-        printf("2. 중 (30 Mines)\n");
-        printf("3. 상 (40 Mines)\n");
-        printf("4. 메인 메뉴로 돌아가기\n");
-        printf("선택: ");
+        printf("\n--- Difficulty Selection (9x9) ---\n");
+        printf("1. Easy (20 Mines)\n");
+        printf("2. Medium (30 Mines)\n");
+        printf("3. Hard (40 Mines)\n");
+        printf("4. Return to Main Menu\n");
+        printf("Select: ");
 
         if (scanf("%d", &choice) != 1) {
-            printf("유효하지 않은 입력입니다. 숫자를 입력하세요.\n");
+            printf("Invalid input. Please enter a number.\n");
             clear_input_buffer();
             continue;
         }
@@ -153,17 +207,23 @@ int select_difficulty() {
         case 1: mines_count = 20; break;
         case 2: mines_count = 30; break;
         case 3: mines_count = 40; break;
-        case 4: return 0; // 메인 메뉴로 돌아가기 위해 0 반환
+        case 4: return 0;  /* Return to main menu */
         default:
-            printf("1에서 4 사이의 유효한 숫자를 입력하세요.\n");
+            printf("Please enter a valid number between 1 and 4.\n");
             continue;
         }
-        return mines_count; // 유효한 지뢰 개수 반환
+        return mines_count;
     }
 }
 
-// --- main 함수 (메뉴 루프를 포함하도록 수정) ---
-
+/**
+ * @brief Main entry point for the Minesweeper game
+ *
+ * Displays the game menu, handles difficulty selection, and runs
+ * the game loop. Supports revealing cells, flagging, and quitting.
+ *
+ * @return 0 on normal exit
+ */
 int mineFinder() {
     srand((unsigned int)time(NULL));
 
@@ -171,39 +231,39 @@ int mineFinder() {
         int menu_choice;
 
         printf("\n====================================\n");
-        printf("=== 텍스트 기반 지뢰 찾기 ===\n");
+        printf("=== Text-Based Minesweeper ===\n");
         printf("====================================\n");
-        printf("1. 게임 시작 (난이도 선택)\n");
-        printf("2. 창 닫기 (종료)\n");
-        printf("선택: ");
+        printf("1. Start Game (Select Difficulty)\n");
+        printf("2. Exit Game\n");
+        printf("Select: ");
 
         if (scanf("%d", &menu_choice) != 1) {
-            printf("1 또는 2를 입력하세요.\n");
+            printf("Please enter 1 or 2.\n");
             clear_input_buffer();
             continue;
         }
         clear_input_buffer();
 
         if (menu_choice == 2) {
-            printf("게임을 종료합니다.\n");
-            break; // 프로그램 종료
+            printf("Exiting the game.\n");
+            break;
         }
 
         if (menu_choice == 1) {
             int selected_mines = select_difficulty();
 
             if (selected_mines == 0) {
-                // 난이도 선택에서 '메인 메뉴로 돌아가기(4)'를 선택한 경우
+                /* User chose to return to main menu */
                 continue;
             }
 
-            // --- 게임 초기화 및 시작 로직 (기존 main 함수 로직) ---
+            /* Initialize game with selected difficulty */
             g_mines = selected_mines;
 
             initDisplay();
             placeMines(g_mines);
             computeAdjacent();
-            totalRevealed = 0; // 초기화
+            totalRevealed = 0;
 
             printf("=== Text-Based Minesweeper (%dx%d, %d mines) ===\n", ROWS, COLS, g_mines);
             printf("Commands:\n");
@@ -213,34 +273,36 @@ int mineFinder() {
 
             printBoard(g_mines);
 
+            /* Game loop */
             while (true) {
                 char cmd_char;
                 int row = -1, col = -1;
 
                 printf("Enter command: ");
 
-                // 명령어 문자만 먼저 읽음 (r, f, q)
+                /* Read command character (r, f, or q) */
                 if (scanf(" %c", &cmd_char) != 1) {
                     printf("Invalid input!\n");
                     clear_input_buffer();
                     continue;
                 }
 
-                // q나 Q는 즉시 처리하고 게임 루프 종료 (메인 메뉴로 돌아감)
+                /* Handle quit command immediately */
                 if (tolower(cmd_char) == 'q') {
                     printf("Quit game. Returning to main menu.\n");
                     clear_input_buffer();
                     break;
                 }
 
-                // r이나 f의 경우, row와 col을 읽어야 함
+                /* Read row and column for r/f commands */
                 if (scanf("%d %d", &row, &col) != 2) {
                     printf("Invalid input! Expected: r/f followed by row col\n");
                     clear_input_buffer();
                     continue;
                 }
-                clear_input_buffer(); // 숫자 읽은 후 버퍼 비우기
+                clear_input_buffer();
 
+                /* Validate position bounds */
                 if (row < 0 || row >= ROWS || col < 0 || col >= COLS) {
                     printf("Invalid position! Rows/cols must be 0-%d\n", ROWS - 1);
                     continue;
@@ -249,6 +311,7 @@ int mineFinder() {
                 char cmd = tolower(cmd_char);
 
                 if (cmd == 'r') {
+                    /* Handle reveal command */
                     if (displayBoard[row][col] == 'F') {
                         printf("Unflag the cell first!\n");
                         continue;
@@ -259,7 +322,7 @@ int mineFinder() {
                     }
 
                     if (mineBoard[row][col]) {
-                        // Game over: reveal all mines
+                        /* Game over: hit a mine */
                         for (int i = 0; i < ROWS; i++) {
                             for (int j = 0; j < COLS; j++) {
                                 if (mineBoard[i][j]) {
@@ -269,39 +332,42 @@ int mineFinder() {
                         }
                         printBoard(g_mines);
                         printf("BOOM! You hit a mine. GAME OVER!\n");
-                        goto END_GAME; // 게임 종료 후 메인 메뉴로 돌아감
+                        goto END_GAME;
                     }
 
-                    // Safe to reveal
+                    /* Safe cell - reveal it */
                     reveal(row, col);
                     printBoard(g_mines);
 
+                    /* Check win condition */
                     if (hasWon(g_mines)) {
                         printBoard(g_mines);
                         printf("YOU WIN! All safe cells revealed!\n");
-                        goto END_GAME; // 게임 종료 후 메인 메뉴로 돌아감
+                        goto END_GAME;
                     }
                 }
                 else if (cmd == 'f') {
+                    /* Handle flag command */
                     if (displayBoard[row][col] != '?' && displayBoard[row][col] != 'F') {
                         printf("Cannot flag a revealed cell!\n");
                         continue;
                     }
+                    /* Toggle flag */
                     displayBoard[row][col] = (displayBoard[row][col] == 'F') ? '?' : 'F';
                     printBoard(g_mines);
                 }
                 else {
                     printf("Unknown command '%c'! Use r, f, or q.\n", cmd_char);
                 }
-            } // end of game loop
+            }
 
-        END_GAME:; // 게임 종료 후 메인 메뉴로 돌아옴
+        END_GAME:;  /* Label for jumping after game ends */
 
         }
         else {
-            printf("유효하지 않은 선택입니다.\n");
+            printf("Invalid selection.\n");
         }
-    } // end of main menu loop
+    }
 
     return 0;
 }
