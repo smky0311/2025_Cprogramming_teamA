@@ -1,6 +1,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>   // strcspn 사용
+#include <ctype.h>    // isdigit 사용
+#include <windows.h>  // 콘솔 한글 설정
+#include <locale.h>   // setlocale 사용
 #include "common.h" 
 #include "book.h"
 #include "user.h"
@@ -21,6 +25,10 @@ int g_bookCount = 0; // 책 카운트 초기화
 int g_userCount = 0; // 유저 카운트 초기화
 
 int main() {
+    // UTF-8로 설정
+    SetConsoleOutputCP(65001);
+    SetConsoleCP(65001);
+    system("chcp 65001 > nul");
     // 1. 데이터 로드
     loadBooks(); // 책 데이터 로드
     loadUsers(); // 유저 데이터 로드
