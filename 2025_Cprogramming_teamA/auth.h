@@ -1,4 +1,4 @@
 #pragma once
 
 void signUp();
-int login(); // ¼º°ø ½Ã 1, ½ÇÆÐ ½Ã 0 ¹ÝÈ¯ÇÏµµ·Ï ¼³°è
+int login(); // ì„±ê³µ ì‹œ 1, ì‹¤íŒ¨ ì‹œ 0 ë°˜í™˜í•˜ë„ë¡ ì„¤ê³„

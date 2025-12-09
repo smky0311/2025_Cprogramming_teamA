@@ -1,82 +1,90 @@
+#define _CRT_SECURE_NO_WARNINGS
 // book.c
-#include <stdio.h>      // printf, scanf, FILE, fopen, fclose µî »ç¿ë
-#include "common.h"      // Àü¿ª º¯¼ö g_books[], g_bookCount, MAX_BOOKS, Book ±¸Á¶Ã¼ Á¤ÀÇ
-#include "book.h"        // ÇÔ¼ö ¼±¾ðºÎ (loadBooks, saveBooks, manageBooks)
+#include <stdio.h>      // printf, scanf, FILE, fopen, fclose ë“± ì‚¬ìš©
+#include "common.h"      // ì „ì—­ ë³€ìˆ˜ g_books[], g_bookCount, MAX_BOOKS, Book êµ¬ì¡°ì²´ ì •ì˜
+#include "book.h"        // í•¨ìˆ˜ ì„ ì–¸ë¶€ (loadBooks, saveBooks, manageBooks)
 
-// ÇÁ·Î±×·¥ ½ÃÀÛ ½Ã ÀÚµ¿À¸·Î È£Ãâ ¡æ ÀÌÀü¿¡ ÀúÀåµÈ µµ¼­ µ¥ÀÌÅÍ¸¦ ÆÄÀÏ¿¡¼­ ÀÐ¾î¿È
+// í”„ë¡œê·¸ëž¨ ì‹œìž‘ ì‹œ ìžë™ìœ¼ë¡œ í˜¸ì¶œ â†’ ì´ì „ì— ì €ìž¥ëœ ë„ì„œ ë°ì´í„°ë¥¼ íŒŒì¼ì—ì„œ ì½ì–´ì˜´
 void loadBooks() {
-    FILE *fp = fopen("books.dat", "rb");        // books.dat ÆÄÀÏÀ» ¹ÙÀÌ³Ê¸® ÀÐ±â ¸ðµå·Î ¿­±â
-    if (fp == NULL) {                           // ÆÄÀÏÀÌ ¾øÀ¸¸é(Ã³À½ ½ÇÇàÇÏ°Å³ª »èÁ¦µÈ °æ¿ì)
-        printf("[System] books.dat ÆÄÀÏÀÌ ¾ø½À´Ï´Ù. »õ·Î ½ÃÀÛÇÕ´Ï´Ù.\n");
-        g_bookCount = 0;                        // µµ¼­ °³¼ö¸¦ 0À¸·Î ÃÊ±âÈ­
-        return;                                 // ÇÔ¼ö Á¾·á
+    FILE *fp = fopen("books.dat", "rb");        // books.dat íŒŒì¼ì„ ë°”ì´ë„ˆë¦¬ ì½ê¸° ëª¨ë“œë¡œ ì—´ê¸°
+    if (fp == NULL) {                           // íŒŒì¼ì´ ì—†ìœ¼ë©´(ì²˜ìŒ ì‹¤í–‰í•˜ê±°ë‚˜ ì‚­ì œëœ ê²½ìš°)
+        printf("[System] books.dat íŒŒì¼ì´ ì—†ìŠµë‹ˆë‹¤. ìƒˆë¡œ ì‹œìž‘í•©ë‹ˆë‹¤.\n");
+        g_bookCount = 0;                        // ë„ì„œ ê°œìˆ˜ë¥¼ 0ìœ¼ë¡œ ì´ˆê¸°í™”
+        return;                                 // í•¨ìˆ˜ ì¢…ë£Œ
     }
     
-    // ÆÄÀÏÀÌ ÀÖÀ¸¸é ÀüÃ¼ ¹è¿­À» ÇÑ ¹ø¿¡ ÀÐ¾î¿È
-    fread(g_books, sizeof(Book), MAX_BOOKS, fp);  // g_books ¹è¿­ Å©±â¸¸Å­ ÀÐ±â
-    fclose(fp);                                   // ÆÄÀÏ ´Ý±â
+    // íŒŒì¼ì´ ìžˆìœ¼ë©´ ì „ì²´ ë°°ì—´ì„ í•œ ë²ˆì— ì½ì–´ì˜´
+    fread(g_books, sizeof(Book), MAX_BOOKS, fp);  // g_books ë°°ì—´ í¬ê¸°ë§Œí¼ ì½ê¸°
+    fclose(fp);                                   // íŒŒì¼ ë‹«ê¸°
 
-    // ½ÇÁ¦·Î ¸î ±ÇÀÌ ÀúÀåµÅ ÀÖ´ÂÁö °è»ê (id°¡ 0ÀÌ¸é ºó Ä­ÀÌ¶ó°í °¡Á¤)
+    // ì‹¤ì œë¡œ ëª‡ ê¶Œì´ ì €ìž¥ë¼ ìžˆëŠ”ì§€ ê³„ì‚° (idê°€ 0ì´ë©´ ë¹ˆ ì¹¸ì´ë¼ê³  ê°€ì •)
     g_bookCount = 0;
     while (g_bookCount < MAX_BOOKS && g_books[g_bookCount].id != 0)
-        g_bookCount++;                            // id°¡ 0ÀÌ ³ª¿Ã ¶§±îÁö Ä«¿îÆ® Áõ°¡
+        g_bookCount++;                            // idê°€ 0ì´ ë‚˜ì˜¬ ë•Œê¹Œì§€ ì¹´ìš´íŠ¸ ì¦ê°€
 
-    printf("[System] µµ¼­ %d±Ç ·Îµå ¿Ï·á!\n", g_bookCount);  // ·Îµå ¿Ï·á ¸Þ½ÃÁö
+    printf("[System] ë„ì„œ %dê¶Œ ë¡œë“œ ì™„ë£Œ!\n", g_bookCount);  // ë¡œë“œ ì™„ë£Œ ë©”ì‹œì§€
 }
 
-// ÇÁ·Î±×·¥ Á¾·á Á÷Àü¿¡ ÀÚµ¿À¸·Î È£Ãâ ¡æ ÇöÀç ¸Þ¸ð¸®ÀÇ µµ¼­ µ¥ÀÌÅÍ¸¦ ÆÄÀÏ¿¡ ÀúÀå
+// í”„ë¡œê·¸ëž¨ ì¢…ë£Œ ì§ì „ì— ìžë™ìœ¼ë¡œ í˜¸ì¶œ â†’ í˜„ìž¬ ë©”ëª¨ë¦¬ì˜ ë„ì„œ ë°ì´í„°ë¥¼ íŒŒì¼ì— ì €ìž¥
 void saveBooks() {
-    FILE *fp = fopen("books.dat", "wb");        // ¹ÙÀÌ³Ê¸® ¾²±â ¸ðµå·Î ÆÄÀÏ ¿­±â(¾øÀ¸¸é »ý¼º)
-    if (fp == NULL) {                           // ÆÄÀÏ ¿­±â ½ÇÆÐ ½Ã
-        printf("[Error] ÀúÀå ½ÇÆÐ!\n");
+    FILE *fp = fopen("books.dat", "wb");        // ë°”ì´ë„ˆë¦¬ ì“°ê¸° ëª¨ë“œë¡œ íŒŒì¼ ì—´ê¸°(ì—†ìœ¼ë©´ ìƒì„±)
+    if (fp == NULL) {                           // íŒŒì¼ ì—´ê¸° ì‹¤íŒ¨ ì‹œ
+        printf("[Error] ì €ìž¥ ì‹¤íŒ¨!\n");
         return;
     }
     
-    // ÇöÀç g_books ¹è¿­ ÀüÃ¼¸¦ ÅëÂ°·Î ÆÄÀÏ¿¡ ÀúÀå
+    // í˜„ìž¬ g_books ë°°ì—´ ì „ì²´ë¥¼ í†µì§¸ë¡œ íŒŒì¼ì— ì €ìž¥
     fwrite(g_books, sizeof(Book), MAX_BOOKS, fp);
-    fclose(fp);                                 // ÆÄÀÏ ´Ý±â
-    printf("[System] µµ¼­ µ¥ÀÌÅÍ ÀúÀå ¿Ï·á!\n");
+    fclose(fp);                                 // íŒŒì¼ ë‹«ê¸°
+    printf("[System] ë„ì„œ ë°ì´í„° ì €ìž¥ ì™„ë£Œ!\n");
 }
 
-// °ü¸®ÀÚ ¸Þ´º¿¡¼­ 3¹ø ¼±ÅÃ ½Ã È£ÃâµÇ´Â µµ¼­ °ü¸® ¸Þ´º
+// ê´€ë¦¬ìž ë©”ë‰´ì—ì„œ 3ë²ˆ ì„ íƒ ì‹œ í˜¸ì¶œë˜ëŠ” ë„ì„œ ê´€ë¦¬ ë©”ë‰´
 void manageBooks() {
-    int ch;                                     // »ç¿ëÀÚ ÀÔ·Â ÀúÀåÇÒ º¯¼ö
-    while (1) {                                 // 0 ÀÔ·ÂÇÒ ¶§±îÁö ¹«ÇÑ ¹Ýº¹
-        printf("\n=== µµ¼­ °ü¸® (°ü¸®ÀÚ) ===\n");
-        printf("1. µµ¼­ Ãß°¡\n2. µµ¼­ ¸ñ·Ï\n0. µ¹¾Æ°¡±â\n¼±ÅÃ: ");
-        scanf("%d", &ch);                       // ¸Þ´º ¼±ÅÃ ÀÔ·Â
+    char buf[256];
+    int ch;                                     // ì‚¬ìš©ìž ìž…ë ¥ ì €ìž¥í•  ë³€ìˆ˜
+    while (1) {                                 // 0 ìž…ë ¥í•  ë•Œê¹Œì§€ ë¬´í•œ ë°˜ë³µ
+        printf("\n=== ë„ì„œ ê´€ë¦¬ (ê´€ë¦¬ìž) ===\n");
+        printf("1. ë„ì„œ ì¶”ê°€\n2. ë„ì„œ ëª©ë¡\n0. ëŒì•„ê°€ê¸°\nì„ íƒ: ");
+        if (scanf("%d", &ch) != 1) {            // C6031: check scanf return value
+            printf("[Error] ìž…ë ¥ ì˜¤ë¥˜! ìˆ«ìžë¥¼ ìž…ë ¥í•˜ì„¸ìš”.\n");
+            // ìž…ë ¥ ë²„í¼ ë¹„ìš°ê¸°
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF);
+            continue;
+        }
 
-        // 1. µµ¼­ Ãß°¡
+        // 1. ë„ì„œ ì¶”ê°€
         if (ch == 1) {
-            if (g_bookCount >= MAX_BOOKS) {     // ¹è¿­ÀÌ ²Ë Ã¡À¸¸é ´õ ÀÌ»ó Ãß°¡ ºÒ°¡
-                printf("´õ ÀÌ»ó Ãß°¡ ºÒ°¡!\n");
+            if (g_bookCount >= MAX_BOOKS) {     // ë°°ì—´ì´ ê½‰ ì°¼ìœ¼ë©´ ë” ì´ìƒ ì¶”ê°€ ë¶ˆê°€
+                printf("ë” ì´ìƒ ì¶”ê°€ ë¶ˆê°€!\n");
                 continue;
             }
-            // ÇöÀç ºñ¾î ÀÖ´Â ´ÙÀ½ À§Ä¡¿¡ »õ µµ¼­ Á¤º¸ ÀÔ·Â
-            Book *b = &g_books[g_bookCount];    // »õ µµ¼­¸¦ ³ÖÀ» À§Ä¡ Æ÷ÀÎÅÍ
-            printf("ID: ");     scanf("%d", &b->id);       // µµ¼­ ID ÀÔ·Â
-            printf("Á¦¸ñ: ");   scanf("%s", b->title);     // Á¦¸ñ ÀÔ·Â
-            printf("ÀúÀÚ: ");   scanf("%s", b->author);    // ÀúÀÚ ÀÔ·Â
-            b->available = 1;                           // ´ëÃâ °¡´É »óÅÂ·Î ÃÊ±âÈ­
-            g_bookCount++;                              // ÃÑ µµ¼­ ¼ö 1 Áõ°¡
-            printf("Ãß°¡ ¿Ï·á! ÇöÀç %d±Ç\n", g_bookCount);
+            // í˜„ìž¬ ë¹„ì–´ ìžˆëŠ” ë‹¤ìŒ ìœ„ì¹˜ì— ìƒˆ ë„ì„œ ì •ë³´ ìž…ë ¥
+            Book *b = &g_books[g_bookCount];    // ìƒˆ ë„ì„œë¥¼ ë„£ì„ ìœ„ì¹˜ í¬ì¸í„°
+            printf("ID: ");    fgets(b->id, sizeof(buf), stdin);       // ë„ì„œ ID ìž…ë ¥
+            printf("ì œëª©: ");   fgets(b->title, sizeof(buf), stdin) ;     // ì œëª© ìž…ë ¥
+            printf("ì €ìž: ");   fgets(b->author, sizeof(buf), stdin);   // ì €ìž ìž…ë ¥
+            b->available = 1;                           // ëŒ€ì¶œ ê°€ëŠ¥ ìƒíƒœë¡œ ì´ˆê¸°í™”
+            g_bookCount++;                              // ì´ ë„ì„œ ìˆ˜ 1 ì¦ê°€
+            printf("ì¶”ê°€ ì™„ë£Œ! í˜„ìž¬ %dê¶Œ\n", g_bookCount);
         }
         
-        // 2. µµ¼­ ¸ñ·Ï Ãâ·Â
+        // 2. ë„ì„œ ëª©ë¡ ì¶œë ¥
         else if (ch == 2) {
-            printf("\nµµ¼­ ¸ñ·Ï (%d±Ç)\n", g_bookCount);
+            printf("\në„ì„œ ëª©ë¡ (%dê¶Œ)\n", g_bookCount);
             for (int i = 0; i < g_bookCount; i++) {
                 printf("%d | %s | %s | %s\n",
                        g_books[i].id,
                        g_books[i].title,
                        g_books[i].author,
-                       g_books[i].available ? "´ëÃâ°¡´É" : "´ëÃâÁß");
+                       g_books[i].available ? "ëŒ€ì¶œê°€ëŠ¥" : "ëŒ€ì¶œì¤‘");
             }
         }
         
-        // 0. µ¹¾Æ°¡±â
+        // 0. ëŒì•„ê°€ê¸°
         else if (ch == 0) {
-            break;                              // while ·çÇÁ Å»Ãâ ¡æ ¸ÞÀÎ ¸Þ´º·Î º¹±Í
+            break;                              // while ë£¨í”„ íƒˆì¶œ â†’ ë©”ì¸ ë©”ë‰´ë¡œ ë³µê·€
         }
     }
 }

@@ -1,95 +1,101 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+#include <stdlib.h>
 #include "common.h" 
 #include "book.h"
 #include "user.h"
 #include "auth.h"
+#include "mine.h"
 
-// main.c´Â ÃÖ¼ÒÇÑÀ¸·Î ÅÍÄ¡
-// °¢°¢ ¸ÃÀº¹üÀ§ À§ÁÖ·Î ÄÚµåÀÛ¼ºÇÏ±â
-// ÆÀ¿ø1 -> user.c (ÇÔ¼ö3°³)
-// ÆÀ¿ø2 -> book.c (ÇÔ¼ö3°³)
-// ÆÀ¿ø3 -> auth.c (È¸¿ø°¡ÀÔ)
-// ÆÀ¿ø4 -> auth.c (·Î±×ÀÎ)
-// [Àü¿ª º¯¼ö ½ÇÁ¦ Á¤ÀÇ]
-// ÇÁ·Î±×·¥ ÀüÃ¼¿¡¼­ ¸Þ¸ð¸®´Â ¿ÀÁ÷ ¿©±â¼­¸¸ ÇÒ´çµÊ
-Book g_books[MAX_BOOKS]; // Ã¥ ¹è¿­ ÂüÁ¶
-User g_users[MAX_USERS]; // À¯Àú ¹è¿­ ÂüÁ¶
-int g_bookCount = 0; // Ã¥ Ä«¿îÆ® ÃÊ±âÈ­
-int g_userCount = 0; // À¯Àú Ä«¿îÆ® ÃÊ±âÈ­
+// main.cëŠ” ìµœì†Œí•œìœ¼ë¡œ í„°ì¹˜
+// ê°ê° ë§¡ì€ë²”ìœ„ ìœ„ì£¼ë¡œ ì½”ë“œìž‘ì„±í•˜ê¸°
+// íŒ€ì›1 -> user.c (í•¨ìˆ˜3ê°œ)
+// íŒ€ì›2 -> book.c (í•¨ìˆ˜3ê°œ)
+// íŒ€ì›3 -> auth.c (íšŒì›ê°€ìž…)
+// íŒ€ì›4 -> auth.c (ë¡œê·¸ì¸)
+// [ì „ì—­ ë³€ìˆ˜ ì‹¤ì œ ì •ì˜]
+// í”„ë¡œê·¸ëž¨ ì „ì²´ì—ì„œ ë©”ëª¨ë¦¬ëŠ” ì˜¤ì§ ì—¬ê¸°ì„œë§Œ í• ë‹¹ë¨
+Book g_books[MAX_BOOKS]; // ì±… ë°°ì—´ ì°¸ì¡°
+User g_users[MAX_USERS]; // ìœ ì € ë°°ì—´ ì°¸ì¡°
+int g_bookCount = 0; // ì±… ì¹´ìš´íŠ¸ ì´ˆê¸°í™”
+int g_userCount = 0; // ìœ ì € ì¹´ìš´íŠ¸ ì´ˆê¸°í™”
 
 int main() {
-    // 1. µ¥ÀÌÅÍ ·Îµå
-    loadBooks(); // Ã¥ µ¥ÀÌÅÍ ·Îµå
-    loadUsers(); // À¯Àú µ¥ÀÌÅÍ ·Îµå
+    // 1. ë°ì´í„° ë¡œë“œ
+    loadBooks(); // ì±… ë°ì´í„° ë¡œë“œ
+    loadUsers(); // ìœ ì € ë°ì´í„° ë¡œë“œ
 
-    char choiceStr[10]; // ÀÔ·Â°ªÀ» ¹ÞÀ» ¹®ÀÚ¿­ ¹öÆÛ ¼±¾ð
-    int choice; // switch¹®¿ë º¯¼ö¼±¾ð
-    int isLoggedIn = 0; // ·Î±×ÀÎ »óÅÂÃ¼Å© (0: ·Î±×¿ÀÇÁ, 1: ·Î±×ÀÎ)
+    char choiceStr[10]; // ìž…ë ¥ê°’ì„ ë°›ì„ ë¬¸ìžì—´ ë²„í¼ ì„ ì–¸
+    int choice; // switchë¬¸ìš© ë³€ìˆ˜ì„ ì–¸
+    int isLoggedIn = 0; // ë¡œê·¸ì¸ ìƒíƒœì²´í¬ (0: ë¡œê·¸ì˜¤í”„, 1: ë¡œê·¸ì¸)
 
-    // 2. ¸ÞÀÎ ·çÇÁ
+    // 2. ë©”ì¸ ë£¨í”„
     while (1) {
-        printf("\n=== µµ¼­ °ü¸® ÇÁ·Î±×·¥ ===\n");
-        printf("1. È¸¿ø°¡ÀÔ\n");
-        printf("2. ·Î±×ÀÎ\n");
-        printf("3. µµ¼­ °ü¸® (Admin)\n");
-        printf("4. È¸¿ø °ü¸® (Admin)\n");
-        printf("0. Á¾·á\n");
-        printf("¼±ÅÃ: ");
+        printf("\n=== ë„ì„œ ê´€ë¦¬ í”„ë¡œê·¸ëž¨ ===\n");
+        printf("1. íšŒì›ê°€ìž…\n");
+        printf("2. ë¡œê·¸ì¸\n");
+        printf("3. ë„ì„œ ê´€ë¦¬ (Admin)\n");
+        printf("4. íšŒì› ê´€ë¦¬ (Admin)\n");
+        printf("0. ì¢…ë£Œ\n");
+        printf("ì„ íƒ: ");
 
-        // 1. ÀÔ·Â¹Þ±â
-        if (fgets(choiceStr, sizeof(choiceStr), stdin) == NULL) { // choiceStr°ªÀ» ¹Þ¾Æ¼­ ¿À¹öÇÃ·Î¿ìµÅ¼­ NULLÀÌ ¹ÝÈ¯µÇ¸é
-            printf("ÀÔ·Â ¿À·ùÀÔ´Ï´Ù.\n"); // ÀÔ·Â¿À·ù Ãâ·Â
-            continue; // ´ÙÀ½ ÄÚµå ½ÇÇàÇÏÁö¾Ê°í ÃÊ±â·Î ÄÁÆ¼´º
+        // 1. ìž…ë ¥ë°›ê¸°
+        if (fgets(choiceStr, sizeof(choiceStr), stdin) == NULL) { // choiceStrê°’ì„ ë°›ì•„ì„œ ì˜¤ë²„í”Œë¡œìš°ë¼ì„œ NULLì´ ë°˜í™˜ë˜ë©´
+            printf("ìž…ë ¥ ì˜¤ë¥˜ìž…ë‹ˆë‹¤.\n"); // ìž…ë ¥ì˜¤ë¥˜ ì¶œë ¥
+            continue; // ë‹¤ìŒ ì½”ë“œ ì‹¤í–‰í•˜ì§€ì•Šê³  ì´ˆê¸°ë¡œ ì»¨í‹°ë‰´
         }
-        // 2. °³Çà ¹®ÀÚ Á¦°Å (¿£ÅÍÅ° ¹®ÀÚ·Î ¹Þ´Â°Å ¾ø¾Ö±â)
-        choiceStr[strcspn(choiceStr, "\r\n")] = '\0'; // r nµÑÁß ÇÑ°ªÀÌ¶óµµ µé¾î¿À¸é NULL·Î º¯È¯ 
+        // 2. ê°œí–‰ ë¬¸ìž ì œê±° (ì—”í„°í‚¤ ë¬¸ìžë¡œ ë°›ëŠ”ê±° ì—†ì• ê¸°)
+        choiceStr[strcspn(choiceStr, "\r\n")] = '\0'; // r në‘˜ì¤‘ í•œê°’ì´ë¼ë„ ë“¤ì–´ì˜¤ë©´ NULLë¡œ ë³€í™˜ 
 
-        // 3. ºó ÀÔ·Â È®ÀÎ (±×³É ¿£ÅÍ¸¸ ÃÆÀ» ¶§)
-        if (choiceStr[0] == '\0') { // NULL°ª¸¸ ÀÔ·ÂµÇ¸é
-            printf("¾Æ¹«°Íµµ ÀÔ·ÂÇÏÁö ¾Ê¾Ò½À´Ï´Ù.\n"); // ¿¡·¯¸Þ½ÃÁö Ãâ·Â
-            continue; // ÃÊ±â·Î ÄÁÆ¼´º
+        // 3. ë¹ˆ ìž…ë ¥ í™•ì¸ (ê·¸ëƒ¥ ì—”í„°ë§Œ ì³¤ì„ ë•Œ)
+        if (choiceStr[0] == '\0') { // NULLê°’ë§Œ ìž…ë ¥ë˜ë©´
+            printf("ì•„ë¬´ê²ƒë„ ìž…ë ¥í•˜ì§€ ì•Šì•˜ìŠµë‹ˆë‹¤.\n"); // ì—ëŸ¬ë©”ì‹œì§€ ì¶œë ¥
+            continue; // ì´ˆê¸°ë¡œ ì»¨í‹°ë‰´
         }
 
-        // 4. ¼ýÀÚÀÎÁö ÇÑ ±ÛÀÚ¾¿ °Ë»ç
-        int isNumber = 1; // "¼ýÀÚ°¡ ¸Â´Ù"°í °¡Á¤ÇÏ°í ½ÃÀÛ
-        for (int i = 0; choiceStr[i] != '\0'; i++) { // choiceStr ¹è¿­ 0ºÎÅÍ °Ë»ç½ÃÀÛ
-            // isdigit: ¹®ÀÚ°¡ '0'~'9' »çÀÌ¸é Âü, ¾Æ´Ï¸é °ÅÁþ
-            if (!isdigit(choiceStr[i])) { // isdigitÀÇ °ªÀÌ falseÀÌ¸é !isdigit Áï trueÀÌ¹Ç·Î Á¶°Ç¹®½ÇÇà 
-                isNumber = 0; // ¼ýÀÚ°¡ ¾Æ´Ñ°Ô ¹ß°ßµÇ¸é
-                break;        // Áß´Ü
+        // 4. ìˆ«ìžì¸ì§€ í•œ ê¸€ìžì”© ê²€ì‚¬
+        int isNumber = 1; // "ìˆ«ìžê°€ ë§žë‹¤"ê³  ê°€ì •í•˜ê³  ì‹œìž‘
+        for (int i = 0; choiceStr[i] != '\0'; i++) { // choiceStr ë°°ì—´ 0ë¶€í„° ê²€ì‚¬ì‹œìž‘
+            // isdigit: ë¬¸ìžê°€ '0'~'9' ì‚¬ì´ë©´ ì°¸, ì•„ë‹ˆë©´ ê±°ì§“
+            if (!isdigit(choiceStr[i])) { // isdigitì˜ ê°’ì´ falseì´ë©´ !isdigit ì¦‰ trueì´ë¯€ë¡œ ì¡°ê±´ë¬¸ì‹¤í–‰ 
+                isNumber = 0; // ìˆ«ìžê°€ ì•„ë‹Œê²Œ ë°œê²¬ë˜ë©´
+                break;        // ì¤‘ë‹¨
             }
         }
 
-        // 5. ¼ýÀÚ°¡ ¾Æ´Ï¶ó¸é ¿¡·¯ Ãâ·Â ÈÄ Ã³À½À¸·Î
-        if (isNumber == 0) { // isNumber 1·Î °¡Á¤ÇÏ°í ½ÃÀÛÇß´Âµ¥ 4¹øÁ¶°Ç¹®À» °ÅÄ¡¸ç 0°ªÀÌµÇ¸é
-            printf("¼ýÀÚ¸¸ ÀÔ·ÂÇØÁÖ¼¼¿ä.\n"); // ¿¡·¯¸Þ½ÃÁöÃâ·Â
-            continue; // ÃÊ±â·Î ÄÁÆ¼´º
+        // 5. ìˆ«ìžê°€ ì•„ë‹ˆë¼ë©´ ì—ëŸ¬ ì¶œë ¥ í›„ ì²˜ìŒìœ¼ë¡œ
+        if (isNumber == 0) { // isNumber 1ë¡œ ê°€ì •í•˜ê³  ì‹œìž‘í–ˆëŠ”ë° 4ë²ˆì¡°ê±´ë¬¸ì„ ê±°ì¹˜ë©° 0ê°’ì´ë˜ë©´
+            printf("ìˆ«ìžë§Œ ìž…ë ¥í•´ì£¼ì„¸ìš”.\n"); // ì—ëŸ¬ë©”ì‹œì§€ì¶œë ¥
+            continue; // ì´ˆê¸°ë¡œ ì»¨í‹°ë‰´
         }
-        choice = atoi(choiceStr); // ¹®ÀÚ¿­À» Á¤¼ö·Î º¯È¯ fgets´Â ¹®ÀÚ¿­À» ¹ÞÀ¸¹Ç·Î atoi¸¦ ÀÌ¿ëÇØ Á¤¼ö·Î º¯È¯ÇØÁØ´Ù.
+        choice = atoi(choiceStr); // ë¬¸ìžì—´ì„ ì •ìˆ˜ë¡œ ë³€í™˜ fgetsëŠ” ë¬¸ìžì—´ì„ ë°›ìœ¼ë¯€ë¡œ atoië¥¼ ì´ìš©í•´ ì •ìˆ˜ë¡œ ë³€í™˜í•´ì¤€ë‹¤.
 
         switch (choice) {
         case 1:
-            signUp(); // È¸¿ø°¡ÀÔ ÇÔ¼öÈ£Ãâ
+            signUp(); // íšŒì›ê°€ìž… í•¨ìˆ˜í˜¸ì¶œ
             break;
         case 2:
-            isLoggedIn = login(); // ·Î±×ÀÎ ¼º°ø¿©ºÎ ¹ÝÈ¯
+            isLoggedIn = login(); // ë¡œê·¸ì¸ ì„±ê³µì—¬ë¶€ ë°˜í™˜
             break;
         case 3:
-            manageBooks(); // Ã¥°ü¸® ÇÔ¼öÈ£Ãâ
+            manageBooks(); // ì±…ê´€ë¦¬ í•¨ìˆ˜í˜¸ì¶œ
             break;
         case 4:
-            manageUsers(); // À¯Àú°ü¸® ÇÔ¼öÈ£Ãâ
+            manageUsers(); // ìœ ì €ê´€ë¦¬ í•¨ìˆ˜í˜¸ì¶œ
+            break;
+        case 5:
+            mineFinder(); // ì§€ë¢°ì°¾ê¸° í•¨ìˆ˜í˜¸ì¶œ
             break;
         case 0:
-            // Á¾·áÀü µ¥ÀÌÅÍÀúÀå
-            saveBooks(); // Ã¥ Á¤º¸ÀúÀå
-            saveUsers(); // À¯Àú Á¤º¸ÀúÀå
-            printf("ÇÁ·Î±×·¥À» Á¾·áÇÕ´Ï´Ù.\n"); // ÇÁ·Î±×·¥ Á¾·á Ãâ·Â
-            return 0; // 0¸®ÅÏ
-        default: // µðÆúÆ®°ª
-            printf("Àß¸øµÈ ÀÔ·ÂÀÔ´Ï´Ù.\n"); // ¿¡·¯¸Þ½ÃÁö Ãâ·Â
+            // ì¢…ë£Œì „ ë°ì´í„°ì €ìž¥
+            saveBooks(); // ì±… ì •ë³´ì €ìž¥
+            saveUsers(); // ìœ ì € ì •ë³´ì €ìž¥
+            printf("í”„ë¡œê·¸ëž¨ì„ ì¢…ë£Œí•©ë‹ˆë‹¤.\n"); // í”„ë¡œê·¸ëž¨ ì¢…ë£Œ ì¶œë ¥
+            return 0; // 0ë¦¬í„´
+        default: // ë””í´íŠ¸ê°’
+            printf("ìž˜ëª»ëœ ìž…ë ¥ìž…ë‹ˆë‹¤.\n"); // ì—ëŸ¬ë©”ì‹œì§€ ì¶œë ¥
         }
     }
-    return 0; // 0¸®ÅÏ
+    return 0; // 0ë¦¬í„´
 }
 
