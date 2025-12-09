@@ -36,8 +36,9 @@ int main() {
         printf("2. 로그인\n");
         printf("3. 도서 관리 (Admin)\n");
         printf("4. 회원 관리 (Admin)\n");
+        printf("5. 지뢰 찾기 (Game)\n");
         printf("0. 종료\n");
-        printf("선택: ");
+        printf("선택:  ");
 
         // 1. 입력받기
         if (fgets(choiceStr, sizeof(choiceStr), stdin) == NULL) { // choiceStr값을 받아서 오버플로우돼서 NULL이 반환되면
