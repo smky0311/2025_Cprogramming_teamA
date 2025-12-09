@@ -13,7 +13,7 @@ void loadBooks() {
     }
 
     fread(g_books, sizeof(Book), MAX_BOOKS, fp);
-    fclose(fp);
+    fclose(fp); 
 
     // id[0]이 '\0'이면 빈 칸
     g_bookCount = 0;
