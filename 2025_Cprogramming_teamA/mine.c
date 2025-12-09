@@ -165,7 +165,7 @@ int select_difficulty() {
 // --- main 함수 (메뉴 루프를 포함하도록 수정) ---
 
 int mineFinder() {
-    srand(time(NULL));
+    srand((unsigned int)time(NULL));
 
     while (true) {
         int menu_choice;
