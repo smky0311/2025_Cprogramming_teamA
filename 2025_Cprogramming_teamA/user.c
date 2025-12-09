@@ -1,19 +1,20 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#include "common.h" // Àü¿ªº¯¼ö(g_users) »ç¿ëÀ» À§ÇØ ÇÊ¼ö
+#include "common.h" // ì „ì—­ë³€ìˆ˜(g_users) ì‚¬ìš©ì„ ìœ„í•´ í•„ìˆ˜
 #include "user.h"
 
-// ÆÀ¿ø 1ÀÌ ¾Æ·¡ ¼¼ ÇÔ¼ö ´ã´ç
+// íŒ€ì› 1ì´ ì•„ë˜ ì„¸ í•¨ìˆ˜ ë‹´ë‹¹
 void loadUsers() {
-    // TODO: users.dat ÆÄÀÏ ÀĞ¾î¼­ g_users¿¡ Ã¤¿ì±â
-    printf("[System] È¸¿ø µ¥ÀÌÅÍ¸¦ ·ÎµåÇß½À´Ï´Ù.\n");
+    // TODO: users.dat íŒŒì¼ ì½ì–´ì„œ g_usersì— ì±„ìš°ê¸°
+    printf("[System] íšŒì› ë°ì´í„°ë¥¼ ë¡œë“œí–ˆìŠµë‹ˆë‹¤.\n");
 }
 
 void saveUsers() {
-    // TODO: g_users ³»¿ëÀ» users.dat¿¡ ÀúÀåÇÏ±â
-    printf("[System] È¸¿ø µ¥ÀÌÅÍ¸¦ ÀúÀåÇß½À´Ï´Ù.\n");
+    // TODO: g_users ë‚´ìš©ì„ users.datì— ì €ì¥í•˜ê¸°
+    printf("[System] íšŒì› ë°ì´í„°ë¥¼ ì €ì¥í–ˆìŠµë‹ˆë‹¤.\n");
 }
 
 void manageUsers() {
-    // TODO: È¸¿ø ¸ñ·Ï Ãâ·Â ±¸Çö
-    printf("[Admin] È¸¿ø °ü¸® ¸Ş´º ÁøÀÔ...\n");
+    // TODO: íšŒì› ëª©ë¡ ì¶œë ¥ êµ¬í˜„
+    printf("[Admin] íšŒì› ê´€ë¦¬ ë©”ë‰´ ì§„ì…...\n");
 }

@@ -1,25 +1,28 @@
 // common.h
-#pragma once  // Çì´õ Áßº¹ Æ÷ÇÔ ¹æÁö
+#pragma once  // í—¤ë” ì¤‘ë³µ í¬í•¨ ë°©ì§€
 
-// 1. »ó¼ö Á¤ÀÇ
-#define MAX_BOOKS 100 // ÃÖ´ë µµ¼­ 100±Ç
-#define MAX_USERS 50 // ÃÖ´ë À¯Àú 50¸í
+// 1. ìƒìˆ˜ ì •ì˜
+#define MAX_BOOKS 100 // ìµœëŒ€ ë„ì„œ 100ê¶Œ
+#define MAX_USERS 50 // ìµœëŒ€ ìœ ì € 50ëª…
 
-// 2. ±¸Á¶Ã¼ Á¤ÀÇ
+// 2. êµ¬ì¡°ì²´ ì •ì˜
 typedef struct {
-    char title[100]; // Ã¥ Á¦¸ñ
+    char title[100]; // ì±… ì œëª©
+    char id[20];
+    int available;
+    char author[30];
     // ... 
 } Book;
 
 typedef struct {
-    char id[20]; // À¯Àú ¾ÆÀÌµğ
-    char pw[20]; // À¯Àú ºñ¹Ğ¹øÈ£
+    char id[20]; // ìœ ì € ì•„ì´ë””
+    char pw[20]; // ìœ ì € ë¹„ë°€ë²ˆí˜¸
     // ... 
 } User;
 
-// 3. Àü¿ª º¯¼ö "¼±¾ğ" (ÀÌ°÷¿¡¼­¸¸ extern »ç¿ë)
-// ÁÖÀÇ: ¿©±â¼­ ÃÊ±âÈ­(= {0})¸¦ ÇÏ¸é ¾ÈµÊ.
-extern Book g_books[MAX_BOOKS]; // Ã¥ ¹è¿­¼±¾ğ
-extern User g_users[MAX_USERS]; // À¯Àú ¹è¿­¼±¾ğ
-extern int g_bookCount; // Ã¥ ³Ñ¹ö¸µ
-extern int g_userCount; // À¯Àú ³Ñ¹ö¸µ
+// 3. ì „ì—­ ë³€ìˆ˜ "ì„ ì–¸" (ì´ê³³ì—ì„œë§Œ extern ì‚¬ìš©)
+// ì£¼ì˜: ì—¬ê¸°ì„œ ì´ˆê¸°í™”(= {0})ë¥¼ í•˜ë©´ ì•ˆë¨.
+extern Book g_books[MAX_BOOKS]; // ì±… ë°°ì—´ì„ ì–¸
+extern User g_users[MAX_USERS]; // ìœ ì € ë°°ì—´ì„ ì–¸
+extern int g_bookCount; // ì±… ë„˜ë²„ë§
+extern int g_userCount; // ìœ ì € ë„˜ë²„ë§
