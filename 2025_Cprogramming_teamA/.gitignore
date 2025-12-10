@@ -1,0 +1,13 @@
+# Compiled object files
+*.o
+
+# Executable
+library_system
+
+# Data files (generated at runtime)
+*.dat
+
+# IDE/Editor files
+.vscode/
+*.swp
+*~
