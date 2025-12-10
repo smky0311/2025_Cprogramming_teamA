@@ -19,6 +19,7 @@
 #include <ctype.h>
 #include "common.h"
 #include "admin.h"
+#include "mine.h"
 
 /* ============================================
  * GLOBAL VARIABLE DEFINITIONS
@@ -245,6 +246,7 @@ static void showMainMenu(void) {
     printf("============================================\n");
     printf("1. User Mode\n");
     printf("2. Admin Mode\n");
+    printf("3. Minesweeper Game\n");
     printf("0. Exit\n");
     printf("============================================\n");
     printf("Select: ");
@@ -303,6 +305,11 @@ int main(void) {
             case 2:
                 /* Admin Mode: book/user management, loan status */
                 adminMode();
+                break;
+
+            case 3:
+                /* Minesweeper Game: fun bonus feature */
+                mineFinder();
                 break;
 
             case 0:

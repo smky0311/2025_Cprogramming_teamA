@@ -18,13 +18,13 @@ CFLAGS = -Wall -Wextra -std=c99 -g
 TARGET = library_system
 
 # Source files
-SRCS = main.c user.c admin.c utils.c
+SRCS = main.c user.c admin.c utils.c mine.c
 
 # Object files (automatically generated from source files)
 OBJS = $(SRCS:.c=.o)
 
 # Header files (for dependency tracking)
-HEADERS = book.h user.h common.h admin.h utils.h
+HEADERS = book.h user.h common.h admin.h utils.h mine.h
 
 # ============================================
 # Build Rules
