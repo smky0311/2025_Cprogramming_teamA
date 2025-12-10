@@ -47,7 +47,7 @@ int g_userCount = 0;              /* Current number of users */
 void loadBooks(void) {
     FILE* fp;
 
-    /* Open file in binary read mode */
+    // Open file in binary read mode
     fp = fopen(BOOKS_FILE, "rb");
 
     if (fp == NULL) {
@@ -58,7 +58,7 @@ void loadBooks(void) {
         return;
     }
 
-    /* Read the book count first */
+    // Read the book count first
     if (fread(&g_bookCount, sizeof(int), 1, fp) != 1) {
         printf("[Warning] Could not read book count. Starting fresh.\n");
         g_bookCount = 0;
@@ -66,7 +66,7 @@ void loadBooks(void) {
         return;
     }
 
-    /* Validate count */
+    // Validate count
     if (g_bookCount < 0 || g_bookCount > MAX_BOOKS) {
         printf("[Warning] Invalid book count in file. Starting fresh.\n");
         g_bookCount = 0;
@@ -74,7 +74,7 @@ void loadBooks(void) {
         return;
     }
 
-    /* Read the book array using fread */
+    // Read the book array using fread
     if (g_bookCount > 0) {
         size_t readCount = fread(g_books, sizeof(struct Book),
                                   g_bookCount, fp);
@@ -85,7 +85,7 @@ void loadBooks(void) {
         }
     }
 
-    fclose(fp);  /* Close file handler */
+    fclose(fp);  // Close file handler
     printf("[System] Loaded %d book(s) from %s.\n", g_bookCount, BOOKS_FILE);
 }
 
@@ -102,7 +102,7 @@ void loadBooks(void) {
 void saveBooks(void) {
     FILE* fp;
 
-    /* Open file in binary write mode */
+    // Open file in binary write mode
     fp = fopen(BOOKS_FILE, "wb");
 
     if (fp == NULL) {
@@ -110,15 +110,15 @@ void saveBooks(void) {
         return;
     }
 
-    /* Write the book count first */
+    // Write the book count first
     fwrite(&g_bookCount, sizeof(int), 1, fp);
 
-    /* Write the book array using fwrite */
+    // Write the book array using fwrite
     if (g_bookCount > 0) {
         fwrite(g_books, sizeof(struct Book), g_bookCount, fp);
     }
 
-    fclose(fp);  /* Close file handler */
+    fclose(fp);  // Close file handler
     printf("[System] Saved %d book(s) to %s.\n", g_bookCount, BOOKS_FILE);
 }
 

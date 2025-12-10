@@ -80,23 +80,23 @@ void signUp(void) {
 
     printf("\n=== Sign Up ===\n");
 
-    /* Check if user limit is reached */
+    // Check if user limit is reached
     if (g_userCount >= MAX_USERS) {
         printf("[Error] Maximum user limit reached. Cannot register.\n");
         return;
     }
 
-    /* Get username */
+    // Get username
     printf("Enter username: ");
     readString(username, sizeof(username));
 
-    /* Check for empty input */
+    // Check for empty input
     if (strlen(username) == 0) {
         printf("[Error] Username cannot be empty.\n");
         return;
     }
 
-    /* Check if username already exists (using strcmp) */
+    // Check if username already exists (using strcmp)
     for (int i = 0; i < g_userCount; i++) {
         if (strcmp(g_users[i].username, username) == 0) {
             printf("[Error] Username '%s' already exists.\n", username);
@@ -263,7 +263,7 @@ void searchBook(void) {
 
     printf("\n=== Search Book ===\n");
 
-    /* Check if any books exist */
+    // Check if any books exist
     if (g_bookCount == 0) {
         printf("[Info] No books in the library.\n");
         return;
@@ -349,20 +349,20 @@ void loanBook(int loggedInUserID) {
     char input[20];
     int userIndex = findUserByID(loggedInUserID);
     int bookIndex;
-    struct Book* book;     /* Pointer to book for modification */
-    struct User* user;     /* Pointer to user for modification */
+    struct Book* book;     
+    struct User* user;
 
     printf("\n=== Borrow Book ===\n");
 
-    /* Validate user */
+    // Validate user
     if (userIndex == -1) {
         printf("[Error] Invalid user session.\n");
         return;
     }
 
-    user = &g_users[userIndex];  /* Get pointer to user */
+    user = &g_users[userIndex];
 
-    /* Check borrow limit */
+    // Check borrow limit
     if (user->borrowedCount >= MAX_BORROW) {
         printf("[Error] You have reached the maximum borrow limit (%d books).\n",
                MAX_BORROW);

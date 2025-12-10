@@ -1,31 +1,18 @@
-/**
- * @file book.h
- * @brief Header file for Book structure definition
- *
- * This file defines the Book structure and related constants
+ /* This file defines the Book structure and related constants
  * for the library management system.
  */
 
 #ifndef BOOK_H
 #define BOOK_H
 
-/* ============================================
- * CONSTANT DEFINITIONS FOR BOOK
- * ============================================ */
+// CONSTANT DEFINITIONS FOR BOOK
+
 #define MAX_TITLE 100    /* Maximum length of book title */
 #define MAX_AUTHOR 50    /* Maximum length of author name */
 #define MAX_GENRE 30     /* Maximum length of genre name */
 
-/* ============================================
- * BOOK STRUCTURE DEFINITION
- * ============================================ */
+// BOOK STRUCTURE DEFINITION
 
-/**
- * @brief Structure representing a book in the library
- *
- * Contains all information about a single book including
- * its identification, metadata, and borrowing status.
- */
 struct Book {
     int id;                      /* Unique book ID (auto-generated) */
     char title[MAX_TITLE];       /* Book title */

@@ -9,24 +9,17 @@
 #ifndef USER_H
 #define USER_H
 
-/* ============================================
- * CONSTANT DEFINITIONS FOR USER
- * ============================================ */
+
+// * CONSTANT DEFINITIONS FOR USER
+
 #define MAX_USERNAME 50   /* Maximum length of username (login ID) */
 #define MAX_PASSWORD 50   /* Maximum length of password */
 #define MAX_NAME 30       /* Maximum length of user's real name */
 #define MAX_BORROW 5      /* Maximum number of books a user can borrow */
 
-/* ============================================
- * USER STRUCTURE DEFINITION
- * ============================================ */
 
-/**
- * @brief Structure representing a user in the system
- *
- * Contains all information about a single user including
- * authentication credentials and borrowing information.
- */
+// * USER STRUCTURE DEFINITION
+
 struct User {
     int userID;                        /* Unique user ID (auto-generated) */
     char username[MAX_USERNAME];       /* Login ID */

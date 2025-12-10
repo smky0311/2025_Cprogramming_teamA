@@ -27,6 +27,15 @@
     <ClCompile Include="auth.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mine.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="admin.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h">
@@ -39,6 +48,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="auth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="admin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
