@@ -130,7 +130,7 @@ int getNextUserID(void) {
  * @param width The total width available
  */
 static void printCenteredLine(const char* text, int width) {
-    int textLen = strlen(text);
+    int textLen = (int)strlen(text);  /* Cast to int to avoid C4267 warning */
     int padding;
 
     /* Truncate if text is too long */
@@ -190,7 +190,7 @@ void displayBookCover(struct Book* book) {
         return;
     }
 
-    titleLen = strlen(book->title);
+    titleLen = (int)strlen(book->title);  /* Cast to int to avoid C4267 warning */
 
     /* Split title into two lines if necessary */
     if (titleLen <= MAX_LINE_LEN) {
