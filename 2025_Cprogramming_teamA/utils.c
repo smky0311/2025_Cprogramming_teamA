@@ -6,6 +6,8 @@
  * search functions, ID generation, and the ASCII book cover display.
  */
 
+#define _CRT_SECURE_NO_WARNINGS  /* Disable MSVC security warnings for fopen, strcpy, etc. */
+
 #include <stdio.h>
 #include <string.h>
 #include "common.h"

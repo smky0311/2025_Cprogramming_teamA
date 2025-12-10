@@ -9,6 +9,8 @@
  * - Loan status monitoring with advanced cross-referencing
  */
 
+#define _CRT_SECURE_NO_WARNINGS  /* Disable MSVC security warnings for fopen, strcpy, etc. */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
