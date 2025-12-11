@@ -1,17 +1,10 @@
-/**
- * @file auth.h
- * @brief Legacy authentication header (deprecated)
- *
- * This file is kept for Visual Studio project compatibility.
- * Authentication functions have been moved to common.h
- *
- * Note: Use common.h for all function declarations
- */
+// auth.h: Legacy authentication header (deprecated)
+// Kept for project compatibility. Functions moved to common.h.
 
 #ifndef AUTH_H
 #define AUTH_H
 
-/* All authentication functions are now declared in common.h */
-/* See: signUp(), login() in user.c */
+// Check common.h for function declarations.
+// See signUp() and login() in user.c for implementation.
 
-#endif /* AUTH_H */
+#endif // AUTH_H
