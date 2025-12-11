@@ -63,14 +63,14 @@ void initDisplay() {
  * @param g_mines Number of mines to place on the board
  */
 void placeMines(int g_mines) {
-    /* Clear all cells first */
+    // Clear all cells
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
             mineBoard[i][j] = false;
         }
     }
 
-    /* Place mines randomly */
+    // Place mines randomly
     int placed = 0;
     while (placed < g_mines) {
         int r = rand() % ROWS;
@@ -142,21 +142,21 @@ void printBoard(int MINES_count) {
  * @param c Column index of the cell to reveal
  */
 void reveal(int r, int c) {
-    /* Boundary and already-revealed checks */
+    // Boundary and already-revealed checks
     if (r < 0 || r >= ROWS || c < 0 || c >= COLS || displayBoard[r][c] != '?') {
         return;
     }
 
-    /* Don't reveal mine cells through flood-fill */
+    // Don't reveal mine cells through flood-fill
     if (mineBoard[r][c]) {
         return;
     }
 
-    /* Reveal this cell */
+    // Reveal this cell
     displayBoard[r][c] = (adjacentMines[r][c] == 0) ? ' ' : ('0' + adjacentMines[r][c]);
     totalRevealed++;
 
-    /* Flood-fill: if cell is empty, reveal adjacent cells */
+    // Flood-fill
     if (adjacentMines[r][c] == 0) {
         for (int d = 0; d < 8; d++) {
             reveal(r + dx[d], c + dy[d]);

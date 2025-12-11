@@ -658,12 +658,11 @@ void viewLoanStatus(void) {
 
     printf("\n=== Current Loan Status ===\n");
 
-    /* Header */
     printf("\n%-6s %-25s %-20s %-20s\n",
            "ID", "Book Title", "Author", "Borrowed By");
     printf("----------------------------------------------------------------------\n");
 
-    /* Search through all books for borrowed ones */
+    // Search through all books for borrowed ones
     for (int i = 0; i < g_bookCount; i++) {
         if (g_books[i].status == 1) {  /* Book is borrowed */
             borrowedCount++;
@@ -693,7 +692,7 @@ void viewLoanStatus(void) {
         printf("\n[Info] Total borrowed books: %d\n", borrowedCount);
     }
 
-    /* Show summary by user */
+    // Show summary by user
     printf("\n=== Borrowing Summary by User ===\n");
     printf("\n%-6s %-20s %-20s %-10s\n",
            "ID", "Username", "Name", "Books");
