@@ -1,51 +1,37 @@
-/**
- * @file mine.c
- * @brief Text-based Minesweeper game module
- *
- * This file implements a classic Minesweeper game with selectable
- * difficulty levels. Features include cell revealing, flagging,
- * flood-fill for empty cells, and win/lose detection.
- */
-
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdbool.h>
-#include <ctype.h>  /* Required for tolower function */
+#include <ctype.h>  // Required for tolower function
 #include "common.h"
 
-#define ROWS 9  /* Number of rows in the game board */
-#define COLS 9  /* Number of columns in the game board */
+#define ROWS 9  // Number of rows in the game board
+#define COLS 9  // Number of columns in the game board
 
-/* Global variables for game state */
-int g_mines = 0;                    /* Current number of mines */
-bool mineBoard[ROWS][COLS];         /* True if cell contains a mine */
-int adjacentMines[ROWS][COLS];      /* Count of adjacent mines for each cell */
-char displayBoard[ROWS][COLS];      /* Display state: '?', 'F', ' ', '1'-'8', '*' */
-int totalRevealed = 0;              /* Number of safe cells revealed */
+// Global variables for game state
+int g_mines = 0;                    // Current number of mines
+bool mineBoard[ROWS][COLS];         // True if cell contains a mine
+int adjacentMines[ROWS][COLS];      // Count of adjacent mines for each cell
+char displayBoard[ROWS][COLS];      // Display state: '?', 'F', ' ', '1'-'8', '*'
+int totalRevealed = 0;              // Number of safe cells revealed
 
-/* Direction vectors for 8 adjacent cells (N, NE, E, SE, S, SW, W, NW) */
+// Direction vectors for 8 adjacent cells (N, NE, E, SE, S, SW, W, NW)
 int dx[8] = { -1, -1, -1, 0, 0, 1, 1, 1 };
 int dy[8] = { -1, 0, 1, -1, 1, -1, 0, 1 };
 
-/**
- * @brief Clears the input buffer
- *
- * Reads and discards all characters from stdin until
- * a newline or EOF is encountered.
- */
+// Reads and discards all characters from stdin until
+// a newline or EOF is encountered.
 void clear_input_buffer() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-/**
- * @brief Initializes the display board with hidden cells
- *
- * Sets all cells on the display board to '?' indicating
- * they are hidden and have not been revealed yet.
- */
+
+ 
+ // Sets all cells on the display board to '?' indicating
+ // they are hidden and have not been revealed yet.
+
 void initDisplay() {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
@@ -54,14 +40,10 @@ void initDisplay() {
     }
 }
 
-/**
- * @brief Randomly places mines on the game board
- *
- * Clears the mine board and randomly places the specified
- * number of mines without overlapping.
- *
- * @param g_mines Number of mines to place on the board
- */
+
+ // Clears the mine board and randomly places the specified
+ // number of mines without overlapping.
+ 
 void placeMines(int g_mines) {
     // Clear all cells
     for (int i = 0; i < ROWS; i++) {
@@ -82,12 +64,10 @@ void placeMines(int g_mines) {
     }
 }
 
-/**
- * @brief Computes adjacent mine counts for all cells
- *
- * Calculates and stores the number of adjacent mines for
- * each safe cell. Mine cells are marked with -1.
- */
+
+ // Calculates and stores the number of adjacent mines for
+ // each safe cell. Mine cells are marked with -1.
+ 
 void computeAdjacent() {
     for (int i = 0; i < ROWS; i++) {
         for (int j = 0; j < COLS; j++) {
@@ -110,14 +90,10 @@ void computeAdjacent() {
     }
 }
 
-/**
- * @brief Prints the current state of the game board
- *
- * Displays the board with row/column indices and shows
- * the current progress (revealed cells vs total safe cells).
- *
- * @param MINES_count Total number of mines for progress calculation
- */
+
+ // Displays the board with row/column indices and shows
+ // the current progress (revealed cells vs total safe cells).
+ 
 void printBoard(int MINES_count) {
     printf("\n  0 1 2 3 4 5 6 7 8\n");
     for (int i = 0; i < ROWS; i++) {
@@ -131,16 +107,11 @@ void printBoard(int MINES_count) {
     printf("Safe cells revealed: %d / %d\n\n", totalRevealed, ROWS * COLS - MINES_count);
 }
 
-/**
- * @brief Reveals a cell and performs flood-fill for empty cells
- *
- * Recursively reveals cells starting from the specified position.
- * If the cell has no adjacent mines, automatically reveals all
- * adjacent safe cells (flood-fill algorithm).
- *
- * @param r Row index of the cell to reveal
- * @param c Column index of the cell to reveal
- */
+
+ // Recursively reveals cells starting from the specified position.
+ // If the cell has no adjacent mines, automatically reveals all
+ // adjacent safe cells (flood-fill algorithm).
+
 void reveal(int r, int c) {
     // Boundary and already-revealed checks
     if (r < 0 || r >= ROWS || c < 0 || c >= COLS || displayBoard[r][c] != '?') {
@@ -164,26 +135,17 @@ void reveal(int r, int c) {
     }
 }
 
-/**
- * @brief Checks if the player has won the game
- *
- * The player wins when all safe (non-mine) cells have been revealed.
- *
- * @param MINES_count Total number of mines
- * @return true if all safe cells are revealed, false otherwise
- */
+
+ // The player wins when all safe (non-mine) cells have been revealed.
+ 
 bool hasWon(int MINES_count) {
     return totalRevealed == (ROWS * COLS - MINES_count);
 }
 
-/**
- * @brief Displays difficulty selection menu and returns mine count
- *
- * Allows the player to choose between Easy, Medium, and Hard
- * difficulty levels, each with different mine counts.
- *
- * @return Number of mines for selected difficulty, 0 to return to menu
- */
+
+ // Allows the player to choose between Easy, Medium, and Hard
+ // difficulty levels, each with different mine counts.
+ 
 int select_difficulty() {
     int choice;
     int mines_count = 0;
@@ -216,14 +178,10 @@ int select_difficulty() {
     }
 }
 
-/**
- * @brief Main entry point for the Minesweeper game
- *
- * Displays the game menu, handles difficulty selection, and runs
- * the game loop. Supports revealing cells, flagging, and quitting.
- *
- * @return 0 on normal exit
- */
+
+ // Displays the game menu, handles difficulty selection, and runs
+ // the game loop. Supports revealing cells, flagging, and quitting.
+ 
 int mineFinder() {
     srand((unsigned int)time(NULL));
 

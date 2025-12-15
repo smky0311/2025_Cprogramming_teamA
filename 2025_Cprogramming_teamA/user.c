@@ -303,24 +303,24 @@ void searchBook(void) {
 
     printf("\n=== Search Results ===\n");
 
-    /* Search through all books using strstr for partial matching */
+    // Search through all books using strstr for partial matching
     for (int i = 0; i < g_bookCount; i++) {
         int match = 0;
 
         if (choice == 1) {
-            /* Search by title using strstr */
+            // Search by title using strstr
             if (strstr(g_books[i].title, keyword) != NULL) {
                 match = 1;
             }
         } else {
-            /* Search by author using strstr */
+            // Search by author using strstr
             if (strstr(g_books[i].author, keyword) != NULL) {
                 match = 1;
             }
         }
 
         if (match) {
-            /* Display matching book with ASCII cover */
+            // Display matching book with ASCII cover
             displayBookCover(&g_books[i]);
             found++;
         }
@@ -333,17 +333,13 @@ void searchBook(void) {
     }
 }
 
-/**
- * @brief Borrows a book for the logged-in user
- *
- * Validates borrowing conditions:
- * - Book must exist and be available
- * - User must not exceed borrow limit (MAX_BORROW)
- *
- * Uses pointers to modify struct array elements.
- *
- * @param loggedInUserID The ID of the user borrowing the book
- */
+
+ // Validates borrowing conditions:
+ // - Book must exist and be available
+ // - User must not exceed borrow limit (MAX_BORROW)
+ 
+ // Uses pointers to modify struct array elements.
+ 
 void loanBook(int loggedInUserID) {
     int bookID;
     char input[20];
@@ -370,11 +366,11 @@ void loanBook(int loggedInUserID) {
         return;
     }
 
-    /* Show available books */
+    // Show available books
     printf("\n--- Available Books ---\n");
     int availableCount = 0;
     for (int i = 0; i < g_bookCount; i++) {
-        if (g_books[i].status == 0) {  /* 0 = available */
+        if (g_books[i].status == 0) {  // 0 = available
             printf("[ID: %d] %s by %s\n",
                    g_books[i].id, g_books[i].title, g_books[i].author);
             availableCount++;
@@ -386,7 +382,7 @@ void loanBook(int loggedInUserID) {
         return;
     }
 
-    /* Get book ID to borrow */
+    // Get book ID to borrow
     printf("\nEnter Book ID to borrow (0 to cancel): ");
     readString(input, sizeof(input));
 
@@ -397,7 +393,7 @@ void loanBook(int loggedInUserID) {
         return;
     }
 
-    /* Find the book */
+    // Find the book
     bookIndex = findBookByID(bookID);
 
     if (bookIndex == -1) {
@@ -405,19 +401,19 @@ void loanBook(int loggedInUserID) {
         return;
     }
 
-    book = &g_books[bookIndex];  /* Get pointer to book */
+    book = &g_books[bookIndex];  // Get pointer to book
 
-    /* Check if book is available */
-    if (book->status == 1) {  /* 1 = borrowed */
+    // Check if book is available
+    if (book->status == 1) {  // 1 = borrowed
         printf("[Error] This book is already borrowed.\n");
         return;
     }
 
-    /* Process the borrow - Update book status using pointer */
-    book->status = 1;                    /* Mark as borrowed */
+    // Process the borrow - Update book status using pointer 
+    book->status = 1;                    // Mark as borrowed 
     book->borrowedByUserID = loggedInUserID;
 
-    /* Update user's borrowed books using pointer */
+    // Update user's borrowed books using pointer
     user->borrowedBookIDs[user->borrowedCount] = bookID;
     user->borrowedCount++;
 
@@ -426,15 +422,11 @@ void loanBook(int loggedInUserID) {
            user->borrowedCount, MAX_BORROW);
 }
 
-/**
- * @brief Returns a borrowed book
- *
- * Finds the book in user's borrowed list and:
- * - Updates book status to available
- * - Removes book from user's borrowed list (array element deletion)
- *
- * @param loggedInUserID The ID of the user returning the book
- */
+
+ // Finds the book in user's borrowed list and:
+ // - Updates book status to available
+ // - Removes book from user's borrowed list (array element deletion)
+ 
 void returnBook(int loggedInUserID) {
     int bookID;
     char input[20];
@@ -446,7 +438,7 @@ void returnBook(int loggedInUserID) {
 
     printf("\n=== Return Book ===\n");
 
-    /* Validate user */
+    // Validate user
     if (userIndex == -1) {
         printf("[Error] Invalid user session.\n");
         return;
@@ -454,13 +446,13 @@ void returnBook(int loggedInUserID) {
 
     user = &g_users[userIndex];
 
-    /* Check if user has borrowed books */
+    // Check if user has borrowed books
     if (user->borrowedCount == 0) {
         printf("[Info] You have no books to return.\n");
         return;
     }
 
-    /* Show user's borrowed books */
+    // Show user's borrowed books
     printf("\n--- Your Borrowed Books ---\n");
     for (int i = 0; i < user->borrowedCount; i++) {
         bookIndex = findBookByID(user->borrowedBookIDs[i]);
@@ -470,7 +462,7 @@ void returnBook(int loggedInUserID) {
         }
     }
 
-    /* Get book ID to return */
+    // Get book ID to return
     printf("\nEnter Book ID to return (0 to cancel): ");
     readString(input, sizeof(input));
 
@@ -481,7 +473,7 @@ void returnBook(int loggedInUserID) {
         return;
     }
 
-    /* Check if user has this book */
+    // Check if user has this book
     for (int i = 0; i < user->borrowedCount; i++) {
         if (user->borrowedBookIDs[i] == bookID) {
             borrowedIndex = i;
@@ -494,7 +486,7 @@ void returnBook(int loggedInUserID) {
         return;
     }
 
-    /* Find the book in global array */
+    // Find the book in global array
     bookIndex = findBookByID(bookID);
 
     if (bookIndex == -1) {
@@ -504,12 +496,12 @@ void returnBook(int loggedInUserID) {
 
     book = &g_books[bookIndex];
 
-    /* Update book status */
-    book->status = 0;           /* Mark as available */
+    // Update book status
+    book->status = 0;          
     book->borrowedByUserID = -1;
 
-    /* Remove book from user's borrowed list (array element deletion) */
-    /* Shift remaining elements to fill the gap */
+    // Remove book from user's borrowed list (array element deletion)
+    // Shift remaining elements to fill the gap
     for (int i = borrowedIndex; i < user->borrowedCount - 1; i++) {
         user->borrowedBookIDs[i] = user->borrowedBookIDs[i + 1];
     }
@@ -521,14 +513,10 @@ void returnBook(int loggedInUserID) {
            user->borrowedCount, MAX_BORROW);
 }
 
-/**
- * @brief Displays user's information and borrowed books
- *
- * Shows user profile and cross-references book data
- * to display borrowed book titles.
- *
- * @param loggedInUserID The ID of the user to display info for
- */
+
+ // Shows user profile and cross-references book data
+ // to display borrowed book titles.
+
 void showMyInfo(int loggedInUserID) {
     int userIndex = findUserByID(loggedInUserID);
     int bookIndex;
@@ -536,7 +524,7 @@ void showMyInfo(int loggedInUserID) {
 
     printf("\n=== My Information ===\n");
 
-    /* Validate user */
+    // Validate user
     if (userIndex == -1) {
         printf("[Error] Invalid user session.\n");
         return;
@@ -544,18 +532,18 @@ void showMyInfo(int loggedInUserID) {
 
     user = &g_users[userIndex];
 
-    /* Display user information */
+    //\Display user information
     printf("\n--- Profile ---\n");
     printf("User ID: %d\n", user->userID);
     printf("Username: %s\n", user->username);
     printf("Name: %s\n", user->name);
     printf("Borrowed Books: %d/%d\n", user->borrowedCount, MAX_BORROW);
 
-    /* Display borrowed books with cross-reference to book data */
+    // Display borrowed books with cross-reference to book data
     if (user->borrowedCount > 0) {
         printf("\n--- Currently Borrowed Books ---\n");
         for (int i = 0; i < user->borrowedCount; i++) {
-            /* Cross-reference: Find book details using book ID */
+            // Cross-reference: Find book details using book ID
             bookIndex = findBookByID(user->borrowedBookIDs[i]);
             if (bookIndex != -1) {
                 printf("%d. [ID: %d] %s by %s\n",

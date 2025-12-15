@@ -1,15 +1,4 @@
-/**
- * @file admin.c
- * @brief Admin mode module for the library management system
- *
- * This file handles all administrator functionality including:
- * - Admin authentication
- * - Book CRUD operations (Create, Read, Update, Delete)
- * - User management (Read, Update, Delete)
- * - Loan status monitoring with advanced cross-referencing
- */
-
-#define _CRT_SECURE_NO_WARNINGS  /* Disable MSVC security warnings for fopen, strcpy, etc. */
+#define _CRT_SECURE_NO_WARNINGS  
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,14 +7,10 @@
 #include "common.h"
 #include "admin.h"
 
-/**
- * @brief Authenticates admin user
- *
- * Prompts for admin credentials and validates against
- * predefined ADMIN_ID and ADMIN_PW.
- *
- * @return 1 on successful authentication, 0 on failure
- */
+
+ // Prompts for admin credentials and validates against
+ // predefined ADMIN_ID and ADMIN_PW.
+ 
 static int adminLogin(void) {
     char id[50];
     char pw[50];
@@ -37,7 +22,7 @@ static int adminLogin(void) {
     printf("Enter Admin Password: ");
     readString(pw, sizeof(pw));
 
-    /* Validate credentials using strcmp */
+    // Validate credentials using strcmp
     if (strcmp(id, ADMIN_ID) == 0 && strcmp(pw, ADMIN_PW) == 0) {
         printf("[Success] Admin authentication successful.\n");
         return 1;
@@ -47,18 +32,16 @@ static int adminLogin(void) {
     return 0;
 }
 
-/**
- * @brief Displays admin mode interface
- *
- * First authenticates the admin, then shows the admin menu
- * with options for book management, user management, and
- * loan status viewing.
- */
+
+ // First authenticates the admin, then shows the admin menu
+ // with options for book management, user management, and
+ // loan status viewing.
+ 
 void adminMode(void) {
     int choice;
     char input[10];
 
-    /* Authenticate admin first */
+    // Authenticate admin first
     if (!adminLogin()) {
         return;
     }
@@ -99,26 +82,24 @@ void adminMode(void) {
     }
 }
 
-/**
- * @brief Adds a new book to the library
- *
- * Prompts for book details and adds to the global array.
- */
+
+ // Prompts for book details and adds to the global array.
+ 
 static void addBook(void) {
     struct Book newBook;
 
     printf("\n=== Add New Book ===\n");
 
-    /* Check if book limit is reached */
+    // Check if book limit is reached
     if (g_bookCount >= MAX_BOOKS) {
         printf("[Error] Maximum book limit reached.\n");
         return;
     }
 
-    /* Generate new book ID */
+    // Generate new book ID
     newBook.id = getNextBookID();
 
-    /* Get book title */
+    // Get book title
     printf("Enter book title: ");
     readString(newBook.title, sizeof(newBook.title));
 
@@ -127,7 +108,7 @@ static void addBook(void) {
         return;
     }
 
-    /* Get author name */
+    // Get author name
     printf("Enter author name: ");
     readString(newBook.author, sizeof(newBook.author));
 
@@ -136,7 +117,7 @@ static void addBook(void) {
         return;
     }
 
-    /* Get genre */
+    // Get genre
     printf("Enter genre: ");
     readString(newBook.genre, sizeof(newBook.genre));
 
@@ -145,26 +126,24 @@ static void addBook(void) {
         return;
     }
 
-    /* Set initial status as available */
-    newBook.status = 0;           /* 0 = available */
+    // Set initial status as available
+    newBook.status = 0;           // 0 = available
     newBook.borrowedByUserID = -1;
 
-    /* Add to global array */
+    // Add to global array
     g_books[g_bookCount] = newBook;
     g_bookCount++;
 
     printf("[Success] Book added with ID %d.\n", newBook.id);
 
-    /* Display the new book with ASCII cover */
+    // Display the new book with ASCII cover
     printf("\n--- Book Added ---\n");
     displayBookCover(&newBook);
 }
 
-/**
- * @brief Displays all books in the library
- *
- * Lists all books with their details and availability status.
- */
+
+ // Lists all books with their details and availability status.
+ 
 static void viewAllBooks(void) {
     printf("\n=== All Books (%d total) ===\n", g_bookCount);
 
@@ -178,11 +157,9 @@ static void viewAllBooks(void) {
     }
 }
 
-/**
- * @brief Updates an existing book's information
- *
- * Allows modification of title, author, or genre.
- */
+
+ // Allows modification of title, author, or genre.
+ 
 static void updateBook(void) {
     int bookID;
     int bookIndex;
@@ -197,14 +174,14 @@ static void updateBook(void) {
         return;
     }
 
-    /* Show all books */
+    // Show all books
     printf("\n--- Book List ---\n");
     for (int i = 0; i < g_bookCount; i++) {
         printf("[ID: %d] %s by %s\n",
                g_books[i].id, g_books[i].title, g_books[i].author);
     }
 
-    /* Get book ID */
+    // Get book ID
     printf("\nEnter Book ID to update (0 to cancel): ");
     readString(input, sizeof(input));
     bookID = atoi(input);
@@ -214,7 +191,7 @@ static void updateBook(void) {
         return;
     }
 
-    /* Find book */
+    // Find book
     bookIndex = findBookByID(bookID);
 
     if (bookIndex == -1) {
@@ -224,7 +201,7 @@ static void updateBook(void) {
 
     book = &g_books[bookIndex];
 
-    /* Show current info */
+    // Show current info
     printf("\n--- Current Book Info ---\n");
     printf("1. Title: %s\n", book->title);
     printf("2. Author: %s\n", book->author);
@@ -274,12 +251,10 @@ static void updateBook(void) {
     }
 }
 
-/**
- * @brief Deletes a book from the library
- *
- * Removes book from the array by shifting elements.
- * Cannot delete if book is currently borrowed.
- */
+
+ // Removes book from the array by shifting elements.
+ // Cannot delete if book is currently borrowed.
+ 
 static void deleteBook(void) {
     int bookID;
     int bookIndex;
@@ -293,7 +268,7 @@ static void deleteBook(void) {
         return;
     }
 
-    /* Show all books */
+    // Show all books
     printf("\n--- Book List ---\n");
     for (int i = 0; i < g_bookCount; i++) {
         printf("[ID: %d] %s (%s)\n",
@@ -301,7 +276,7 @@ static void deleteBook(void) {
                g_books[i].status == 0 ? "Available" : "Borrowed");
     }
 
-    /* Get book ID */
+    // Get book ID
     printf("\nEnter Book ID to delete (0 to cancel): ");
     readString(input, sizeof(input));
     bookID = atoi(input);
@@ -311,7 +286,7 @@ static void deleteBook(void) {
         return;
     }
 
-    /* Find book */
+    // Find book
     bookIndex = findBookByID(bookID);
 
     if (bookIndex == -1) {
@@ -319,13 +294,13 @@ static void deleteBook(void) {
         return;
     }
 
-    /* Check if book is borrowed */
+    // Check if book is borrowed
     if (g_books[bookIndex].status == 1) {
         printf("[Error] Cannot delete a borrowed book. Please wait for return.\n");
         return;
     }
 
-    /* Confirm deletion */
+    // Confirm deletion
     printf("Are you sure you want to delete '%s'? (y/n): ",
            g_books[bookIndex].title);
     readString(confirm, sizeof(confirm));
@@ -335,7 +310,7 @@ static void deleteBook(void) {
         return;
     }
 
-    /* Delete by shifting array elements */
+    // Delete by shifting array elements
     for (int i = bookIndex; i < g_bookCount - 1; i++) {
         g_books[i] = g_books[i + 1];
     }
@@ -344,11 +319,9 @@ static void deleteBook(void) {
     printf("[Success] Book deleted.\n");
 }
 
-/**
- * @brief Manages book CRUD operations
- *
- * Provides submenu for Add, View, Update, Delete operations.
- */
+
+ // Provides submenu for Add, View, Update, Delete operations.
+ 
 void manageBooks(void) {
     int choice;
     char input[10];
@@ -392,11 +365,9 @@ void manageBooks(void) {
     }
 }
 
-/**
- * @brief Displays all registered users
- *
- * Lists all users with their details.
- */
+
+ // Lists all users with their details.
+ 
 static void viewAllUsers(void) {
     printf("\n=== All Users (%d total) ===\n", g_userCount);
 
@@ -419,11 +390,9 @@ static void viewAllUsers(void) {
     }
 }
 
-/**
- * @brief Updates a user's information
- *
- * Allows modification of username, password, or name.
- */
+
+ // Allows modification of username, password, or name.
+
 static void updateUser(void) {
     int userID;
     int userIndex;
@@ -438,10 +407,10 @@ static void updateUser(void) {
         return;
     }
 
-    /* Show all users */
+    // Show all users
     viewAllUsers();
 
-    /* Get user ID */
+    // Get user ID
     printf("\nEnter User ID to update (0 to cancel): ");
     readString(input, sizeof(input));
     userID = atoi(input);
@@ -451,7 +420,7 @@ static void updateUser(void) {
         return;
     }
 
-    /* Find user */
+    // Find user
     userIndex = findUserByID(userID);
 
     if (userIndex == -1) {
@@ -461,7 +430,7 @@ static void updateUser(void) {
 
     user = &g_users[userIndex];
 
-    /* Show current info */
+    // Show current info
     printf("\n--- Current User Info ---\n");
     printf("1. Username: %s\n", user->username);
     printf("2. Password: ****\n");
@@ -483,7 +452,7 @@ static void updateUser(void) {
             printf("Enter new username: ");
             readString(input, sizeof(input));
             if (strlen(input) > 0) {
-                /* Check for duplicate username */
+                // Check for duplicate username
                 int duplicate = 0;
                 for (int i = 0; i < g_userCount; i++) {
                     if (i != userIndex &&
@@ -524,12 +493,10 @@ static void updateUser(void) {
     }
 }
 
-/**
- * @brief Deletes a user from the system
- *
- * Removes user from the array by shifting elements.
- * Also updates any books borrowed by this user.
- */
+
+ // Removes user from the array by shifting elements.
+ // Also updates any books borrowed by this user.
+ 
 static void deleteUser(void) {
     int userID;
     int userIndex;
@@ -544,10 +511,10 @@ static void deleteUser(void) {
         return;
     }
 
-    /* Show all users */
+    // Show all users
     viewAllUsers();
 
-    /* Get user ID */
+    // Get user ID
     printf("\nEnter User ID to delete (0 to cancel): ");
     readString(input, sizeof(input));
     userID = atoi(input);
@@ -557,7 +524,7 @@ static void deleteUser(void) {
         return;
     }
 
-    /* Find user */
+    // Find user
     userIndex = findUserByID(userID);
 
     if (userIndex == -1) {
@@ -567,14 +534,14 @@ static void deleteUser(void) {
 
     user = &g_users[userIndex];
 
-    /* Check if user has borrowed books */
+    // Check if user has borrowed books
     if (user->borrowedCount > 0) {
         printf("[Warning] This user has %d borrowed book(s).\n",
                user->borrowedCount);
         printf("Deleting will mark those books as returned.\n");
     }
 
-    /* Confirm deletion */
+    // Confirm deletion
     printf("Are you sure you want to delete user '%s'? (y/n): ",
            user->username);
     readString(confirm, sizeof(confirm));
@@ -584,7 +551,7 @@ static void deleteUser(void) {
         return;
     }
 
-    /* Return all borrowed books */
+    // Return all borrowed books
     for (int i = 0; i < user->borrowedCount; i++) {
         int bookIndex = findBookByID(user->borrowedBookIDs[i]);
         if (bookIndex != -1) {
@@ -593,7 +560,7 @@ static void deleteUser(void) {
         }
     }
 
-    /* Delete by shifting array elements */
+    // Delete by shifting array elements
     for (int i = userIndex; i < g_userCount - 1; i++) {
         g_users[i] = g_users[i + 1];
     }
@@ -602,12 +569,10 @@ static void deleteUser(void) {
     printf("[Success] User deleted.\n");
 }
 
-/**
- * @brief Manages user CRUD operations
- *
- * Provides submenu for View, Update, Delete operations.
- * Note: Users are added through signUp in user mode.
- */
+
+ // Provides submenu for View, Update, Delete operations.
+ // Note: Users are added through signUp in user mode.
+ 
 void manageUsers(void) {
     int choice;
     char input[10];
@@ -647,12 +612,10 @@ void manageUsers(void) {
     }
 }
 
-/**
- * @brief Displays current loan status
- *
- * Shows all currently borrowed books with borrower information.
- * Implements advanced data cross-referencing between books and users.
- */
+
+ // Shows all currently borrowed books with borrower information.
+ // Implements advanced data cross-referencing between books and users.
+ 
 void viewLoanStatus(void) {
     int borrowedCount = 0;
 
